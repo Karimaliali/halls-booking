@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use app\Models\Hall;
+use App\Models\Hall;
 
 use Illuminate\Http\Request;
 
