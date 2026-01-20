@@ -13,15 +13,20 @@ class BookingController extends Controller
         $validated = $request->validate([
             'user_id'      => 'required|exists:users,id',
             'hall_id'      => 'required|exists:halls,id',
-            'booking_date' => 'required|date',
+            'booking_date' => 'required|date|after_or_equal:today',
         ]);
-
+        $exists = Booking::where('hall_id',$validated['hall_id'])
+        ->wher('booking_date',$validated['booking_date'])
+        ->exists();
+        if($exists){
+            return response()->json(['messagr'=>'عفواً القاعة محجوزة بالفعل في هذا التاريخ'], 422);
+        }
        
         $booking = Booking::create([
             'user_id'      => $validated['user_id'],
             'hall_id'      => $validated['hall_id'],
             'booking_date' => $validated['booking_date'],
-            'status'       => 'pending', // حالة الطلب الافتراضية
+            'status'       => 'pending',
         ]);
 
         
@@ -29,5 +34,11 @@ class BookingController extends Controller
             'message' => 'Booking request sent successfully!',
             'booking' => $booking
         ], 201);
+    }
+    public function check(Request $request){
+        $isBooked = Booking::wher('hall_id',$request->hall_id)
+        ->wher('booking_date',$request->booking_date)
+        ->exists();
+        return response()->json(['available'=> ! $isBooked]);
     }
 }
