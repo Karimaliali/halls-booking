@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking; 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\Facades\NewBookingNotification;
 class BookingController extends Controller
 {
     public function store(Request $request)
@@ -41,4 +42,24 @@ class BookingController extends Controller
         ->exists();
         return response()->json(['available'=> ! $isBooked]);
     }
+    public function confirmPayment($bookingId)
+{
+    // 1. البحث عن الحجز المطلوب
+    $booking = Booking::findOrFail($bookingId);
+
+    // 2. تحديث الحالة لـ مؤكد بعد نجاح الدفع
+    $booking->update(['status' => 'confirmed']);
+
+    // 3. إرسال الإشعار للمدير (الكود اللي سألت عليه)
+    $admin = \App\Models\User::where('role', 'admin')->first();
+    if ($admin) {
+        $admin->notify(new \App\Notifications\NewBookingNotification($booking));
+    }
+
+    return response()->json([
+        'message' => 'تم تأكيد الدفع وإشعار المدير بنجاح',
+        'booking' => $booking
+    ]);
+}
+
 }
