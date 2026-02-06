@@ -17,7 +17,7 @@ class BookingController extends Controller
             'booking_date' => 'required|date|after_or_equal:today',
         ]);
         $exists = Booking::where('hall_id',$validated['hall_id'])
-        ->wher('booking_date',$validated['booking_date'])
+        ->where('booking_date',$validated['booking_date'])
         ->exists();
         if($exists){
             return response()->json(['messagr'=>'عفواً القاعة محجوزة بالفعل في هذا التاريخ'], 422);
@@ -45,11 +45,13 @@ class BookingController extends Controller
     public function confirmPayment($bookingId)
 {
     // 1. البحث عن الحجز المطلوب
-    $booking = Booking::findOrFail($bookingId);
+    $booking = Booking::with(['user','hall.owner'])->findOrFail($bookingId);
 
     // 2. تحديث الحالة لـ مؤكد بعد نجاح الدفع
     $booking->update(['status' => 'confirmed']);
 
+    $booking->hall->owner->notify(new NewBookingNotification($booking));
+    $booking->user->notify(new BookingConfirmedNotification($booking));
     // 3. إرسال الإشعار للمدير (الكود اللي سألت عليه)
     $admin = \App\Models\User::where('role', 'admin')->first();
     if ($admin) {
