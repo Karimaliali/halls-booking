@@ -17,6 +17,10 @@ Route::middleware('auth:sanctum')->group(function (){
     //حذف الحساب
     Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
     Route::post('/halls', [HallController::class, 'store']);
+    Route::middleware('role:owner')->group(function (){
+        Route::put('/halls/{id}', [HallController::class, 'update']);
+        Route::delete('/halls/{id}', [HallController::class, 'destroy']);
+    });
     Route::middleware('role:customer')->group(function (){
         Route::post('/bookings',[BookingController::class,'store']);
     });
@@ -27,3 +31,4 @@ Route::middleware('auth:sanctum')->group(function (){
      Route::middleware('role:customer')->get('/my-bookings', [BookingController::class, 'customerBookings']);
       Route::middleware('role:owner')->get('/owner/bookings', [BookingController::class, 'ownerBookings']);
 });
+
