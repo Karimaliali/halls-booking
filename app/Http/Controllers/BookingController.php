@@ -11,28 +11,58 @@ class BookingController extends Controller
 {
     public function store(Request $request)
     {
+        if ($request->user()->role !== 'customer') {
+            abort(403, 'غير مسموح للمالك بتقديم طلب حجز.');
+        }
+
         $validated = $request->validate([
             'hall_id'      => 'required|exists:halls,id',
             'booking_date' => 'required|date|after_or_equal:today',
+            'userName'     => 'nullable|string|max:255',
+            'userId'       => 'nullable|string|max:14',
+            'idCardImage'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'receiptImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
         $exists = Booking::where('hall_id',$validated['hall_id'])
         ->where('booking_date',$validated['booking_date'])
         ->exists();
+
         if($exists){
-            return response()->json(['message'=>'عفواً القاعة محجوزة بالفعل في هذا التاريخ'], 422);
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['message' => 'عفواً القاعة محجوزة بالفعل في هذا التاريخ'], 422);
+            }
+            return back()->with('error', 'عفواً القاعة محجوزة بالفعل في هذا التاريخ');
         }
-       
+
+        // معالجة الصور
+        $idCardPath = null;
+        $receiptPath = null;
+
+        if ($request->hasFile('idCardImage')) {
+            $idCardPath = $request->file('idCardImage')->store('bookings/id_cards', 'public');
+        }
+
+        if ($request->hasFile('receiptImage')) {
+            $receiptPath = $request->file('receiptImage')->store('bookings/receipts', 'public');
+        }
+
         $booking = Booking::create([
             'user_id'      => $request->user()->id,
             'hall_id'      => $validated['hall_id'],
             'booking_date' => $validated['booking_date'],
             'status'       => 'pending',
+            'user_name'    => $validated['userName'] ?? null,
+            'user_id_number' => $validated['userId'] ?? null,
+            'id_card_image' => $idCardPath,
+            'receipt_image' => $receiptPath,
         ]);
 
-        return response()->json([
-            'message' => 'Booking request sent successfully!',
-            'booking' => $booking
-        ], 201);
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => 'تم إرسال طلب الحجز بنجاح! سيتم مراجعته من قبل الإدارة.']);
+        }
+
+        return back()->with('success', 'تم إرسال طلب الحجز بنجاح! سيتم مراجعته من قبل الإدارة.');
     }
 
     public function check(Request $request){
@@ -58,6 +88,33 @@ class BookingController extends Controller
             'message' => 'تم تأكيد الدفع وإشعار المدير بنجاح',
             'booking' => $booking
         ]);
+    }
+
+    public function confirmBooking(Booking $booking)
+    {
+        abort_if($booking->hall->user_id !== auth()->id(), 403);
+
+        if ($booking->status !== 'pending') {
+            return back()->with('error', 'يمكن فقط تأكيد الحجوزات التي في حالة قيد الانتظار.');
+        }
+
+        $booking->update(['status' => 'confirmed']);
+        $booking->user->notify(new BookingConfirmedNotification($booking));
+
+        return back()->with('success', 'تم تأكيد الحجز بنجاح.');
+    }
+
+    public function cancelBooking(Booking $booking)
+    {
+        abort_if($booking->user_id !== auth()->id(), 403);
+
+        if ($booking->status === 'cancelled') {
+            return back()->with('error', 'تم إلغاء الحجز بالفعل.');
+        }
+
+        $booking->update(['status' => 'cancelled']);
+
+        return back()->with('success', 'تم إلغاء الحجز بنجاح.');
     }
 
     public function customerBookings(Request $request){

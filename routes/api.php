@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/status', [StatusController::class, 'check']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/halls', [HallController::class, 'index']);
+Route::get('/halls/search', [HallController::class, 'searchApi']);
 Route::get('/check-availability',[BookingController::class, 'check']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function (){

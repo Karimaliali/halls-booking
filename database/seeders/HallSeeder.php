@@ -39,14 +39,50 @@ class HallSeeder extends Seeder
             'user_id'=>$owner->id
         ]);
 
-        // القاعة الثالثة
+        // قاعات في طلخا
         Hall::create([
-            'name' => 'قاعة لؤلؤة النيل',
-            'location' => 'المعادي',
-            'capacity' => 150,
-            'price' => 4000.00,
-            'main_image'=>'nile_hall.jpg',
-            'user_id'=>$owner->id
+            'name' => 'قاعة الرياضة الطلخاوية',
+            'location' => 'طلخا - الدقهليه',
+            'capacity' => 300,
+            'price' => 6000.00,
+            'main_image' => 'talakha_sports_hall.jpg',
+            'user_id' => $owner->id
         ]);
-    }
-}
+
+        Hall::create([
+            'name' => 'قاعة الأفراح الطلخاوية',
+            'location' => 'طلخا - الدقهليه',
+            'capacity' => 250,
+            'price' => 4500.00,
+            'main_image' => 'talakha_wedding_hall.jpg',
+            'user_id' => $owner->id
+        ]);
+
+        Hall::create([
+            'name' => 'قاعة المؤتمرات الطلخاوية',
+            'location' => 'طلخا - الدقهليه',
+            'capacity' => 150,
+            'price' => 3500.00,
+            'main_image' => 'talakha_conference_hall.jpg',
+            'user_id' => $owner->id
+        ]);
+
+        // قاعات في بلقاس
+        Hall::create([
+            'name' => 'قاعة بلقاس الكبرى',
+            'location' => 'بلقاس - الدقهليه',
+            'capacity' => 400,
+            'price' => 8000.00,
+            'main_image' => 'belqas_grand_hall.jpg',
+            'user_id' => $owner->id
+        ]);
+
+        Hall::create([
+            'name' => 'قاعة الأفراح بلقاس',
+            'location' => 'بلقاس - الدقهليه',
+            'capacity' => 200,
+            'price' => 5000.00,
+            'main_image' => 'belqas_wedding_hall.jpg',
+            'user_id' => $owner->id
+        ]);
+}}

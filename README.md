@@ -6,6 +6,8 @@
 
 This is a modern Laravel-based API built with best practices for authentication, authorization, and real-time availability tracking.
 
+**Note:** Frontend has been separated into a dedicated project at `../halls-frontend/` for better architecture.
+
 ---
 
 ## ✨ Features

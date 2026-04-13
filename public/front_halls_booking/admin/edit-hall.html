@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=1280" />
+        <title>تعديل القاعة | إيفينتي برو</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="dashboard-container admin-dashboard">
+            <div class="container">
+                <!-- Admin Header -->
+                <div class="dashboard-header admin-header">
+                    <div class="welcome-message">
+                        <h1>تعديل القاعة</h1>
+                        <p>قصر الندى للاحتفالات · آخر تحديث 15 فبراير 2026</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="notification-badge">
+                            <i class="fa-regular fa-bell"></i>
+                            <span class="badge">7</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Card -->
+                <div class="form-card">
+                    <form id="editHallForm">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h3>المعلومات الأساسية</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-building"></i>
+                                        اسم القاعة</label
+                                    >
+                                    <input
+                                        name="name"
+                                        type="text"
+                                        value="قصر الندى للاحتفالات"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-city"></i>
+                                        المحافظة</label
+                                    >
+                                    <select name="province" required>
+                                        <option>القاهرة</option>
+                                        <option>الجيزة</option>
+                                        <option>الإسكندرية</option>
+                                        <option>الدقهلية</option>
+                                        <option>الشرقية</option>
+                                        <option>الغربية</option>
+                                        <option>القليوبية</option>
+                                        <option>المنوفية</option>
+                                        <option>المنيا</option>
+                                        <option>أسيوط</option>
+                                        <option>سوهاج</option>
+                                        <option>قنا</option>
+                                        <option>الأقصر</option>
+                                        <option>أسوان</option>
+                                        <option>البحر الأحمر</option>
+                                        <option>مطروح</option>
+                                        <option>شمال سيناء</option>
+                                        <option>جنوب سيناء</option>
+                                        <option>بورسعيد</option>
+                                        <option>السويس</option>
+                                        <option>الإسماعيلية</option>
+                                        <option>دمياط</option>
+                                        <option>كفر الشيخ</option>
+                                        <option>الفيوم</option>
+                                        <option>بني سويف</option>
+                                        <option selected>الدقهلية</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label
+                                        ><i
+                                            class="fa-regular fa-location-dot"
+                                        ></i>
+                                        العنوان بالتفصيل</label
+                                    >
+                                    <input
+                                        name="address"
+                                        type="text"
+                                        value="طريق الملك فهد، بجوار فندق الماسة، المنصورة"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-map"></i> رابط
+                                        الموقع (Google Maps)</label
+                                    >
+                                    <input
+                                        name="map_url"
+                                        type="url"
+                                        value="https://maps.google.com/?q=31.0437,31.3747"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label
+                                    ><i class="fa-regular fa-align-right"></i>
+                                    وصف القاعة</label
+                                >
+                                <textarea name="description" rows="4">
+قصر الندى للاحتفالات هو واحد من أفخم القاعات في المنصورة، يتميز بتصميمه العصري والفاخر اللي بيجمع بين الأصالة والمعاصرة. بتتسع القاعة الرئيسية لـ 500 ضيف مع إمكانية التوسعة لاستيعاب المزيد. القاعة مجهزة بأحدث أنظمة الصوت والإضاءة، وبتوفر كل الخدمات اللي محتاجها عشان تنجح مناسبتك.</textarea
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Capacity & Pricing -->
+                        <div class="form-section">
+                            <h3>السعة والأسعار</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-users"></i>
+                                        السعة القصوى (عدد الضيوف)</label
+                                    >
+                                    <input
+                                        name="capacity"
+                                        type="number"
+                                        value="500"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        ><i
+                                            class="fa-regular fa-users-line"
+                                        ></i>
+                                        الحد الأدنى للعدد</label
+                                    >
+                                    <input
+                                        name="min_guests"
+                                        type="number"
+                                        value="100"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-sun"></i> سعر
+                                        أيام الأسبوع</label
+                                    >
+                                    <input
+                                        name="weekday_price"
+                                        type="number"
+                                        value="45000"
+                                        placeholder="السعر بالجنيه المصري"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-star"></i> سعر
+                                        نهاية الأسبوع (الجمعة والسبت)</label
+                                    >
+                                    <input
+                                        name="weekend_price"
+                                        type="number"
+                                        value="50000"
+                                        placeholder="السعر بالجنيه المصري"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label
+                                    ><i class="fa-regular fa-crown"></i> سعر
+                                    المناسبات الخاصة (أعياد، مواسم)</label
+                                >
+                                <input
+                                    type="number"
+                                    value="60000"
+                                    placeholder="السعر بالجنيه المصري"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Hall Details -->
+                        <div class="form-section">
+                            <h3>تفاصيل إضافية</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-clock"></i> مدة
+                                        الحجز الأساسية</label
+                                    >
+                                    <select name="duration">
+                                        <option>4 ساعات</option>
+                                        <option selected>6 ساعات</option>
+                                        <option>8 ساعات</option>
+                                        <option>12 ساعة</option>
+                                        <option>24 ساعة</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-hourglass"></i>
+                                        إمكانية التمديد</label
+                                    >
+                                    <select name="extend_option">
+                                        <option selected>
+                                            نعم - مقابل رسوم إضافية
+                                        </option>
+                                        <option>نعم - مجاناً</option>
+                                        <option>لا</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-phone"></i> رقم
+                                        الهاتف</label
+                                    >
+                                    <input
+                                        name="phone"
+                                        type="tel"
+                                        value="01234567890"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        ><i class="fa-regular fa-envelope"></i>
+                                        البريد الإلكتروني</label
+                                    >
+                                    <input
+                                        name="contact_email"
+                                        type="email"
+                                        value="info@qasralnda.com"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features -->
+                        <div class="form-section">
+                            <h3>الخدمات والمميزات</h3>
+                            <div class="features-checkbox-grid">
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-wifi"></i>
+                                    <span>واي فاي مجاني</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-car"></i>
+                                    <span>مواقف سيارات</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-utensils"></i>
+                                    <span>بوفيه مفتوح</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-music"></i>
+                                    <span>دي جي ومنسق موسيقى</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-camera"></i>
+                                    <span>فوتوغرافي متاح</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-microphone"></i>
+                                    <span>أنظمة صوت احترافية</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" />
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>خدمة VIP</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-hotel"></i>
+                                    <span>أجنحة خاصة</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-tv"></i>
+                                    <span>شاشات عرض</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" />
+                                    <i class="fa-solid fa-person-walking"></i>
+                                    <span>فريق تنظيم</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" checked />
+                                    <i class="fa-solid fa-lock"></i>
+                                    <span>أمن وحراسة</span>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" />
+                                    <i class="fa-solid fa-wheelchair"></i>
+                                    <span>دخول لذوي الاحتياجات</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Images -->
+                        <div class="form-section">
+                            <h3>صور القاعة</h3>
+
+                            <!-- Current Images -->
+                            <div class="current-images">
+                                <h4>الصور الحالية</h4>
+                                <div class="images-grid">
+                                    <div class="image-item">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=400&q=80"
+                                            alt="قاعة"
+                                        />
+                                        <button
+                                            class="image-delete"
+                                            title="حذف"
+                                        >
+                                            <i
+                                                class="fa-regular fa-trash-can"
+                                            ></i>
+                                        </button>
+                                        <span class="main-badge">الأساسية</span>
+                                    </div>
+                                    <div class="image-item">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=400&q=80"
+                                            alt="قاعة"
+                                        />
+                                        <button
+                                            class="image-delete"
+                                            title="حذف"
+                                        >
+                                            <i
+                                                class="fa-regular fa-trash-can"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                    <div class="image-item">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=400&q=80"
+                                            alt="قاعة"
+                                        />
+                                        <button
+                                            class="image-delete"
+                                            title="حذف"
+                                        >
+                                            <i
+                                                class="fa-regular fa-trash-can"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                    <div class="image-item">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=400&q=80"
+                                            alt="قاعة"
+                                        />
+                                        <button
+                                            class="image-delete"
+                                            title="حذف"
+                                        >
+                                            <i
+                                                class="fa-regular fa-trash-can"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add New Images -->
+                            <div class="add-images">
+                                <h4>إضافة صور جديدة</h4>
+                                <div class="upload-box">
+                                    <input
+                                        name="images[]"
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        id="newImages"
+                                    />
+                                    <i class="fa-regular fa-images"></i>
+                                    <span>اختر صور جديدة للإضافة</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="form-section">
+                            <h3>حالة القاعة</h3>
+                            <div class="status-radio-group">
+                                <label class="radio-card">
+                                    <input
+                                        type="radio"
+                                        name="status"
+                                        value="active"
+                                        checked
+                                    />
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div>
+                                        <strong>نشط</strong>
+                                        <p>
+                                            ظهور القاعة في نتائج البحث ومتاحة
+                                            للحجز
+                                        </p>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input
+                                        type="radio"
+                                        name="status"
+                                        value="inactive"
+                                    />
+                                    <i class="fa-regular fa-circle-pause"></i>
+                                    <div>
+                                        <strong>غير نشط</strong>
+                                        <p>
+                                            إخفاء القاعة مؤقتاً من نتائج البحث
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel">
+                                إلغاء
+                            </button>
+                            <button type="submit" class="btn-save">
+                                <i class="fa-regular fa-floppy-disk"></i>
+                                حفظ التغييرات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="../bootstrap.js"></script>
+        <script src="../api.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

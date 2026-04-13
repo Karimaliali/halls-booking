@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280" />
+    <title>إدارة الحجوزات |  QAA'A </title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="dashboard-container admin-dashboard">
+      <div class="container">
+        <!-- Admin Header -->
+        <div class="dashboard-header admin-header">
+          <div class="welcome-message">
+            <h1>إدارة الحجوزات</h1>
+            <p>عرض وإدارة جميع الحجوزات في المنصة</p>
+          </div>
+          <div class="header-actions">
+            <button class="notification-badge">
+              <i class="fa-regular fa-bell"></i>
+              <span class="badge">7</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-card">
+          <div class="filters-header">
+            <h3><i class="fa-regular fa-filter"></i> فلترة الحجوزات</h3>
+            <button class="reset-filters">إعادة تعيين</button>
+          </div>
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label>حالة الحجز</label>
+              <select class="filter-select">
+                <option value="all">كل الحالات</option>
+                <option value="pending">تحت المراجعة</option>
+                <option value="confirmed">مؤكد</option>
+                <option value="completed">مكتمل</option>
+                <option value="cancelled">ملغي</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>المحافظة</label>
+              <select class="filter-select">
+                <option value="all">كل المحافظات</option>
+                <option value="cairo">القاهرة</option>
+                <option value="giza">الجيزة</option>
+                <option value="alex">الإسكندرية</option>
+                <option value="daqahlia">الدقهلية</option>
+                <option value="sharqia">الشرقية</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>من تاريخ</label>
+              <input type="date" class="filter-date" value="2026-02-01" />
+            </div>
+            <div class="filter-group">
+              <label>إلى تاريخ</label>
+              <input type="date" class="filter-date" value="2026-02-28" />
+            </div>
+            <div class="filter-group">
+              <label>بحث</label>
+              <input
+                type="text"
+                class="filter-search"
+                placeholder="اسم العميل أو رقم الحجز"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-icon pending">
+              <i class="fa-regular fa-clock"></i>
+            </div>
+            <div class="summary-details">
+              <span class="summary-value">12</span>
+              <span class="summary-label">تحت المراجعة</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon confirmed">
+              <i class="fa-regular fa-circle-check"></i>
+            </div>
+            <div class="summary-details">
+              <span class="summary-value">45</span>
+              <span class="summary-label">مؤكد</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon completed">
+              <i class="fa-regular fa-flag-checkered"></i>
+            </div>
+            <div class="summary-details">
+              <span class="summary-value">89</span>
+              <span class="summary-label">مكتمل</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon cancelled">
+              <i class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="summary-details">
+              <span class="summary-value">8</span>
+              <span class="summary-label">ملغي</span>
+            </div>
+          </div>
+          <div class="summary-card total">
+            <div class="summary-icon">
+              <i class="fa-regular fa-calendar"></i>
+            </div>
+            <div class="summary-details">
+              <span class="summary-value">154</span>
+              <span class="summary-label">إجمالي الحجوزات</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="table-card">
+          <div class="table-header">
+            <h3>قائمة الحجوزات</h3>
+            <div class="table-actions">
+              <button class="export-btn">
+                <i class="fa-regular fa-file-export"></i>
+                تصدير
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="bookings-table">
+              <thead>
+                <tr>
+                  <th>رقم الحجز</th>
+                  <th>العميل</th>
+                  <th>القاعة</th>
+                  <th>التاريخ</th>
+                  <th>المبلغ</th>
+                  <th>الحالة</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="booking-id">#BK-25022026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>نورا عبدالله</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قصر الندى للاحتفالات</td>
+                  <td>25 فبراير 2026</td>
+                  <td><span class="amount">50,000 ج.م</span></td>
+                  <td>
+                    <span class="status-badge pending">تحت المراجعة</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="booking-id">#BK-19022026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>خالد محمد</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قاعة الكريستال</td>
+                  <td>5 مارس 2026</td>
+                  <td><span class="amount">35,000 ج.م</span></td>
+                  <td>
+                    <span class="status-badge pending">تحت المراجعة</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="booking-id">#BK-15022026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>سارة أحمد</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قاعة فينيسيا الملكية</td>
+                  <td>12 مارس 2026</td>
+                  <td><span class="amount">70,000 ج.م</span></td>
+                  <td><span class="status-badge confirmed">مؤكد</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="booking-id">#BK-10022026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>فيصل العتيبي</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قاعة الليالي السعيدة</td>
+                  <td>18 مارس 2026</td>
+                  <td><span class="amount">45,000 ج.م</span></td>
+                  <td><span class="status-badge completed">مكتمل</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="booking-id">#BK-05022026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>لمى القحطاني</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قصر الندى للاحتفالات</td>
+                  <td>20 فبراير 2026</td>
+                  <td><span class="amount">50,000 ج.م</span></td>
+                  <td><span class="status-badge cancelled">ملغي</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="booking-id">#BK-01022026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>تركي الفهيد</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قاعة الكريستال</td>
+                  <td>28 فبراير 2026</td>
+                  <td><span class="amount">35,000 ج.م</span></td>
+                  <td><span class="status-badge confirmed">مؤكد</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="booking-id">#BK-28012026</span></td>
+                  <td>
+                    <div class="customer-cell">
+                      <div>
+                        <strong>هيا الدوسري</strong>
+                        <small>0101234567</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>قاعة فينيسيا الملكية</td>
+                  <td>15 فبراير 2026</td>
+                  <td><span class="amount">70,000 ج.م</span></td>
+                  <td><span class="status-badge completed">مكتمل</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-btn view" title="عرض التفاصيل">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                      <button class="action-btn edit" title="تعديل">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                      <button class="action-btn more" title="المزيد">
+                        <i class="fa-regular fa-ellipsis-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <button class="page-btn">
+              <i class="fa-regular fa-chevron-right"></i>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">
+              <i class="fa-regular fa-chevron-left"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="../bootstrap.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

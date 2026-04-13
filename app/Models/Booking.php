@@ -17,8 +17,8 @@ class Booking extends Model
             return 
             $this->belongsTo(User::class);
          }
-          public function hall(){
-            return 
-            $this->belongsTo(hall::class);
-         }
+          public function hall()
+    {
+        return $this->belongsTo(Hall::class);
+    }
 }

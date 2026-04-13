@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=1280" />
+        <title>بحث عن قاعات | إيفينتي برو</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body class="page-enter">
+        <nav class="navbar">
+            <div class="container nav-container">
+                <div class="logo">
+                    <i class="fas fa-door-open"></i>
+                    <span>QAA'A</span>
+                </div>
+                <ul class="nav-links">
+                    <li>
+                        <a href="index.html"
+                            ><i class="fas fa-home"></i>
+                            <span>الرئيسية</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="search.html" class="active"
+                            ><i class="fas fa-search"></i> <span>البحث</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="index.html#featured"
+                            ><i class="fas fa-star"></i> <span>المميزة</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="index.html#how-to-book"
+                            ><i class="fas fa-clipboard-list"></i>
+                            <span>الحجز</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#contact"
+                            ><i class="fas fa-phone"></i>
+                            <span>التواصل</span></a
+                        >
+                    </li>
+                    <li class="nav-divider"></li>
+                    <li>
+                        <a
+                            href="admin/login.html"
+                            class="nav-auth-btn login-btn"
+                        >
+                            <i class="fas fa-sign-in-alt"></i> <span>دخول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="admin/signup.html" class="nav-signup-btn">
+                            <i class="fas fa-user-plus"></i> <span>تسجيل</span>
+                        </a>
+                    </li>
+                    <!-- زر إضافة قاعة (يظهر فقط للمالك) -->
+                    <li id="add-hall-nav-item" style="display: none">
+                        <a href="#" class="nav-auth-btn add-hall-btn">
+                            <i class="fa fa-plus"></i> <span>إضافة قاعة</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header البحث -->
+        <div class="search-header">
+            <div class="container">
+                <h1>البحث عن القاعات</h1>
+                <p>ابحث بين أكثر من 500 قاعة في جميع أنحاء المملكة</p>
+            </div>
+        </div>
+
+        <!-- شريط البحث المتقدم -->
+        <section class="advanced-search">
+            <div class="container">
+                <div class="search-wrapper">
+                    <div class="search-filters">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label
+                                    ><i class="fa fa-map-marker-alt"></i>
+                                    المدينة أو المنطقة</label
+                                >
+                                <input
+                                    type="text"
+                                    placeholder="مثال: الرياض، جدة، المنصورة"
+                                    value="المنصورة"
+                                />
+                            </div>
+                            <div class="filter-group">
+                                <label
+                                    ><i class="fa fa-calendar"></i> تاريخ
+                                    المناسبة</label
+                                >
+                                <input type="date" value="2026-03-15" />
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label
+                                    ><i class="fa fa-users"></i> عدد
+                                    الضيوف</label
+                                >
+                                <select>
+                                    <option>أقل من 100</option>
+                                    <option selected>100 - 300</option>
+                                    <option>300 - 600</option>
+                                    <option>أكثر من 600</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label
+                                    ><i class="fa fa-tag"></i> تصنيف
+                                    القاعة</label
+                                >
+                                <select>
+                                    <option>جميع التصنيفات</option>
+                                    <option>قاعات أفراح</option>
+                                    <option>قاعات مؤتمرات</option>
+                                    <option>قاعات مناسبات</option>
+                                    <option>قاعات اجتماعات</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-row price-range-row">
+                            <div class="filter-group price-range">
+                                <label
+                                    ><i class="fa fa-money-bill"></i> نطاق السعر
+                                    (بالجنيه)</label
+                                >
+                                <div class="price-inputs">
+                                    <input
+                                        type="number"
+                                        placeholder="الحد الأدنى"
+                                        value="0"
+                                    />
+                                    <span>إلى</span>
+                                    <input
+                                        type="number"
+                                        placeholder="الحد الأقصى"
+                                        value="100000"
+                                    />
+                                </div>
+                            </div>
+                            <button class="btn-search-primary">
+                                <i class="fa fa-search"></i> بحث
+                            </button>
+                            <button
+                                class="btn-reset-filters"
+                                type="button"
+                                style="
+                                    margin-right: 10px;
+                                    background: #eee;
+                                    color: #333;
+                                    border: none;
+                                    padding: 0 18px;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                "
+                            >
+                                <i class="fa fa-rotate-left"></i> إعادة تعيين
+                                الفلاتر
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- الفلاتر السريعة (Tags) -->
+                    <div class="quick-filters">
+                        <span class="filter-tag active">الكل</span>
+                        <span class="filter-tag">مكيفة</span>
+                        <span class="filter-tag">مواقف سيارات</span>
+                        <span class="filter-tag">واي فاي</span>
+                        <span class="filter-tag">بوفيه مفتوح</span>
+                        <span class="filter-tag">قاعة نساء</span>
+                        <span class="filter-tag">قاعة رجال</span>
+                        <span class="filter-tag">غرفة عروس</span>
+                        <span class="filter-tag">شاشات عرض</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- نتائج البحث -->
+        <section class="search-results">
+            <div class="container">
+                <!-- عنوان النتائج وترتيبها -->
+                <div class="results-header">
+                    <div class="results-count">
+                        <h3>12 قاعة متاحة في المنصورة</h3>
+                        <p>تم العثور على 12 قاعة تطابق معايير بحثك</p>
+                    </div>
+                    <div class="sort-options">
+                        <label>ترتيب حسب:</label>
+                        <select>
+                            <option>الأكثر طلباً</option>
+                            <option>الأقل سعراً</option>
+                            <option>الأعلى سعراً</option>
+                            <option>الأعلى تقييماً</option>
+                            <option>الأحدث</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- عرض النتائج (Grid) -->
+                <div class="results-grid">
+                    <!-- بطاقة نتيجة 1 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge available"
+                                >متاحة اليوم</span
+                            >
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قصر الندى للاحتفالات</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.8</span>
+                                    <span class="reviews-count">(128)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> المنصورة، طريق
+                                الملك فهد
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-500 ضيف</span
+                                >
+                                <span><i class="fa fa-car"></i> مواقف</span>
+                                <span><i class="fa fa-wifi"></i> واي فاي</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">50,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 2 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge discount">خصم 20%</span>
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة الكريستال للمؤتمرات</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.5</span>
+                                    <span class="reviews-count">(89)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> جدة، حي الروضة
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-200 ضيف</span
+                                >
+                                <span
+                                    ><i class="fa fa-microphone"></i>
+                                    صوتيات</span
+                                >
+                                <span><i class="fa fa-tv"></i> شاشات</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">35,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 3 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge popular"
+                                >الأكثر طلباً</span
+                            >
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة فينيسيا الملكية</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>5.0</span>
+                                    <span class="reviews-count">(256)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> الخبر، واجهة الخبر
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-800 ضيف</span
+                                >
+                                <span><i class="fa fa-star"></i> VIP</span>
+                                <span><i class="fa fa-hotel"></i> أجنحة</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">70,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 4 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge available"
+                                >متاحة اليوم</span
+                            >
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة الليالي السعيدة</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.3</span>
+                                    <span class="reviews-count">(67)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> الرياض، حي النخيل
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-400 ضيف</span
+                                >
+                                <span
+                                    ><i class="fa fa-utensils"></i> بوفيه</span
+                                >
+                                <span><i class="fa fa-music"></i> دي جي</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">45,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 5 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge">متاحة</span>
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة الأندلس</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.6</span>
+                                    <span class="reviews-count">(112)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> مكة، العزيزية
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-350 ضيف</span
+                                >
+                                <span><i class="fa fa-car"></i> مواقف</span>
+                                <span><i class="fa fa-wifi"></i> واي فاي</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">38,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 6 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge discount">خصم 15%</span>
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة الماسة</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.7</span>
+                                    <span class="reviews-count">(94)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> المدينة المنورة
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-250 ضيف</span
+                                >
+                                <span
+                                    ><i class="fa fa-microphone"></i>
+                                    صوتيات</span
+                                >
+                                <span><i class="fa fa-camera"></i> تصوير</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">42,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 7 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge">متاحة</span>
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة الدانة</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.4</span>
+                                    <span class="reviews-count">(78)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> الدمام، حي الشاطئ
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-300 ضيف</span
+                                >
+                                <span><i class="fa fa-car"></i> مواقف</span>
+                                <span
+                                    ><i class="fa fa-utensils"></i> بوفيه</span
+                                >
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">48,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة نتيجة 8 -->
+                    <div class="result-card">
+                        <div class="result-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80"
+                                alt="قاعة"
+                            />
+                            <span class="result-badge available"
+                                >متاحة اليوم</span
+                            >
+                            <button class="fav-btn">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-header">
+                                <h4>قاعة اللؤلؤة</h4>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.9</span>
+                                    <span class="reviews-count">(203)</span>
+                                </div>
+                            </div>
+                            <p class="result-location">
+                                <i class="fa fa-map-pin"></i> جدة، حي الحمراء
+                            </p>
+                            <div class="result-features">
+                                <span
+                                    ><i class="fa fa-users"></i> 1-600 ضيف</span
+                                >
+                                <span><i class="fa fa-star"></i> VIP</span>
+                                <span><i class="fa fa-wifi"></i> واي فاي</span>
+                            </div>
+                            <div class="result-footer">
+                                <div class="result-price">
+                                    <span class="price">65,000 ج.م</span>
+                                    <span class="price-note">/ ليلة</span>
+                                </div>
+                                <a href="hall-details.html" class="btn-view"
+                                    >عرض التفاصيل</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination (التنقل بين الصفحات) -->
+                <div class="pagination">
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link">4</a>
+                    <a href="#" class="page-link">5</a>
+                    <a href="#" class="page-link next"
+                        ><i class="fa fa-chevron-left"></i> التالي</a
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- خريطة النتائج (اختياري) -->
+        <section class="map-section">
+            <div class="container">
+                <div class="map-toggle">
+                    <button class="btn-toggle-map">
+                        <i class="fa fa-map"></i> عرض القاعات على الخريطة
+                    </button>
+                </div>
+                <div class="map-container hidden">
+                    <img
+                        src="https://maps.googleapis.com/maps/api/staticmap?center=26.8206,30.8025&zoom=6&size=1200x300&maptype=roadmap&markers=color:red%7C26.8206,30.8025&key=YOUR_API_KEY"
+                        alt="خريطة القاعات"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact">
+            <div class="container footer-content">
+                <div class="footer-brand">
+                    <div class="logo">قاعة</div>
+                    <p>
+                        الخيار الأول لحجز وتنظيم القاعات في الشرق الأوسط. نضمن
+                        لك السهولة، الشفافية، والأمان في كل حجز.
+                    </p>
+                </div>
+
+                <div class="footer-contact">
+                    <h5>تواصل معنا</h5>
+                    <p><i class="fa fa-phone"></i> 0106106661</p>
+                    <p><i class="fa fa-envelope"></i> Test@Mail.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; 2026 لدفعة المشروع</p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="bootstrap.js"></script>
+        <script src="api.js"></script>
+        <script src="script.js"></script>
+        <script>
+            // ربط البحث بالباك إند مع جميع الفلاتر وتحسين تجربة المستخدم
+            document.addEventListener('DOMContentLoaded', function() {
+                const btn = document.querySelector('.btn-search-primary');
+                const resetBtn = document.querySelector('.btn-reset-filters');
+                if (!btn) return;
+                btn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> جاري البحث...';
+                    // قراءة القيم من الفلاتر
+                    const city = document.querySelector('input[placeholder*="المدينة"], input[placeholder*="منطقة"]').value.trim();
+                    const date = document.querySelector('input[type="date"]').value;
+                    const guests = document.querySelectorAll('select')[0].value;
+                    const category = document.querySelectorAll('select')[1].value;
+                    const minPrice = document.querySelectorAll('input[type="number"]')[0].value;
+                    const maxPrice = document.querySelectorAll('input[type="number"]')[1].value;
+                    // الفلاتر السريعة (tags)
+                    const activeTags = Array.from(document.querySelectorAll('.filter-tag.active')).map(tag => tag.textContent.trim()).filter(t => t !== 'الكل');
+
+                    // بناء الاستعلام
+                    let query = '?';
+                    if (city) query += 'location=' + encodeURIComponent(city) + '&';
+                    if (guests) query += 'guests=' + encodeURIComponent(guests) + '&';
+                    if (date) query += 'date=' + encodeURIComponent(date) + '&';
+                    if (category && category !== 'جميع التصنيفات') query += 'category=' + encodeURIComponent(category) + '&';
+                    if (minPrice) query += 'min_price=' + encodeURIComponent(minPrice) + '&';
+                    if (maxPrice) query += 'max_price=' + encodeURIComponent(maxPrice) + '&';
+                    if (activeTags.length) activeTags.forEach(f => query += 'features[]=' + encodeURIComponent(f) + '&');
+                    // إزالة & الزائدة
+                    if (query.endsWith('&') || query.endsWith('?')) query = query.slice(0, -1);
+
+                    try {
+                        const data = await apiGet('/halls/search' + query);
+                        renderHalls(data);
+                    } catch (err) {
+                        renderHalls([]);
+                        alert(err.message || 'حدث خطأ أثناء البحث');
+                    } finally {
+                        btn.innerHTML = '<i class="fa fa-search"></i> بحث';
+                    }
+                });
+
+                // زر إعادة تعيين الفلاتر
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', function() {
+                        document.querySelector('input[placeholder*="المدينة"], input[placeholder*="منطقة"]').value = '';
+                        document.querySelector('input[type="date"]').value = '';
+                        document.querySelectorAll('select')[0].selectedIndex = 0;
+                        document.querySelectorAll('select')[1].selectedIndex = 0;
+                        document.querySelectorAll('input[type="number"]')[0].value = '';
+                        document.querySelectorAll('input[type="number"]')[1].value = '';
+                        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                        document.querySelector('.filter-tag').classList.add('active');
+                        renderHalls([]);
+                    });
+                }
+
+                // تفعيل الفلاتر السريعة (tags)
+                document.querySelectorAll('.filter-tag').forEach(tag => {
+                    tag.addEventListener('click', function() {
+                        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            });
+                    if (activeTags.length)
+                        activeTags.forEach(
+                            (f) =>
+                                (query +=
+                                    "features[]=" +
+                                    encodeURIComponent(f) +
+                                    "&"),
+                        );
+                    // إزالة & الزائدة
+                    if (query.endsWith("&") || query.endsWith("?"))
+                        query = query.slice(0, -1);
+
+                    try {
+                        const data = await apiGet("/halls/search" + query);
+                        renderHalls(data);
+                    } catch (err) {
+                        renderHalls([]);
+                        alert(err.message || "حدث خطأ أثناء البحث");
+                    } finally {
+                        btn.innerHTML = '<i class="fa fa-search"></i> بحث';
+                    }
+                });
+
+                // تفعيل الفلاتر السريعة (tags)
+                document.querySelectorAll(".filter-tag").forEach((tag) => {
+                    tag.addEventListener("click", function () {
+                        document
+                            .querySelectorAll(".filter-tag")
+                            .forEach((t) => t.classList.remove("active"));
+                        this.classList.add("active");
+                    });
+                });
+            });
+        </script>
+    </body>
+    <script src="script.js"></script>
+
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="modal" id="hallModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+</html>

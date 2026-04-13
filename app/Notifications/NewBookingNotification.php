@@ -6,17 +6,20 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\Booking;
 
 class NewBookingNotification extends Notification
 {
     use Queueable;
 
+    protected $booking;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(Booking $booking)
     {
-        //
+        $this->booking = $booking;
     }
 
     /**
@@ -34,10 +37,21 @@ class NewBookingNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $hallName = $this->booking->hall ? $this->booking->hall->name : 'غير محدد';
+        $userName = $this->booking->user ? $this->booking->user->name : 'غير محدد';
+        $userEmail = $this->booking->user ? $this->booking->user->email : 'غير محدد';
+
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->subject('حجز جديد لقاعتك')
+            ->greeting('مرحباً!')
+            ->line('تم حجز قاعتك "' . $hallName . '" بواسطة ' . $userName . '.')
+            ->line('تفاصيل الحجز:')
+            ->line('التاريخ: ' . $this->booking->booking_date)
+            ->line('الحالة: ' . $this->booking->status)
+            ->line('اسم العميل: ' . $userName)
+            ->line('البريد الإلكتروني للعميل: ' . $userEmail)
+            ->action('عرض الحجز', url('/admin/bookings/' . $this->booking->id))
+            ->line('شكراً لاستخدامك منصتنا!');
     }
 
     /**
@@ -48,7 +62,11 @@ class NewBookingNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'booking_id' => $this->booking->id,
+            'hall_name' => $this->booking->hall->name,
+            'user_name' => $this->booking->user->name,
+            'booking_date' => $this->booking->booking_date,
+            'status' => $this->booking->status,
         ];
     }
 }

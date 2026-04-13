@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=1280" />
+        <title>لوحة تحكم المالك | إيفينتي برو</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+    </head>
+    <body>
+        <div class="dashboard-container owner-dashboard">
+            <div class="container">
+                <div class="dashboard-header owner-header">
+                    <div class="welcome-message">
+                        <h1>مرحباً بك في لوحة تحكم المالك!</h1>
+                        <p>
+                            يمكنك هنا إدارة قاعاتك ومتابعة الحجوزات الخاصة بك.
+                        </p>
+                    </div>
+                </div>
+                <div class="owner-actions-grid">
+                    <button
+                        class="quick-action-btn primary"
+                        onclick="window.location.href = 'add-hall.html'"
+                    >
+                        <i class="fa-regular fa-plus"></i>
+                        <span>إضافة قاعة جديدة</span>
+                    </button>
+                    <button
+                        class="quick-action-btn warning"
+                        onclick="window.location.href = 'my-bookings.html'"
+                    >
+                        <i class="fa-regular fa-calendar-check"></i>
+                        <span>حجوزاتي</span>
+                    </button>
+                </div>
+                <div class="owner-halls-section">
+                    <h2>قاعاتي</h2>
+                    <div class="halls-list">
+                        <!-- سيتم تحميل القاعات الخاصة بالمالك هنا -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="modal" id="hallModal">
+            <div class="modal-content">
+                <span class="modal-close" id="modalClose">&times;</span>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </body>
+</html>
