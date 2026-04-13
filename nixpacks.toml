@@ -1,2 +1,2 @@
 [phases.setup]
-nixPkgs = ['...', 'libjpeg', 'libpng', 'zlib']
+nixPkgs = ['pkgconfig', 'libjpeg', 'libpng', 'zlib']
