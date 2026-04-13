@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libonig-dev \
     libzip-dev \
     libicu-dev \
