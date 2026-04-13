@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 cd "$(dirname "$0")"
 
@@ -8,30 +7,30 @@ if [ ! -f .env ]; then
   cp .env.example .env
 fi
 
-# Generate application key if missing, then ensure it's in the actual env
-if ! grep -q '^APP_KEY=' .env || [ "$(grep '^APP_KEY=' .env | cut -d '=' -f2)" = "" ]; then
-  php artisan key:generate --force
-fi
-
-# Make sure APP_KEY is exported for the current process
-export $(grep '^APP_KEY=' .env | xargs)
-
-# Ensure database file exists for SQLite if SQLite is configured
-DB_CONNECTION=$(grep '^DB_CONNECTION=' .env | cut -d '=' -f2 | tr -d '\r')
-if [ "$DB_CONNECTION" = "sqlite" ]; then
-  DB_PATH=$(php -r 'echo trim(getenv("DB_DATABASE"));' 2>/dev/null)
-  if [ -z "$DB_PATH" ]; then
-    DB_PATH="database/database.sqlite"
-  fi
-  mkdir -p "$(dirname "$DB_PATH")"
-  # Create empty DB if doesn't exist
-  if [ ! -f "$DB_PATH" ]; then
-    touch "$DB_PATH"
+# Generate or use existing APP_KEY
+if [ -z "$APP_KEY" ]; then
+  # Try to get from .env file
+  if ! grep -q '^APP_KEY=' .env || [ "$(grep '^APP_KEY=' .env | cut -d '=' -f2)" = "" ]; then
+    # Generate new key
+    php artisan key:generate --force 2>/dev/null || true
+  else
+    # Export from .env
+    export $(grep '^APP_KEY=' .env | xargs)
   fi
 fi
+
+# Ensure APP_KEY is set in environment (generate if missing)
+if [ -z "$APP_KEY" ]; then
+  export APP_KEY="base64:$(openssl rand -base64 32)"
+  echo "APP_KEY=$APP_KEY" >> .env
+fi
+
+# Ensure database directory exists
+mkdir -p database
+chmod -R 755 storage database 2>/dev/null || true
 
 # Run migrations in background (don't block server start)
-php artisan migrate --force 2>/dev/null &
+(sleep 2 && php artisan migrate --force 2>/dev/null) &
 
 # Start Laravel server on the specified port
 PORT=${PORT:-8000}
