@@ -23,14 +23,16 @@ if [ "$DB_CONNECTION" = "sqlite" ]; then
   if [ -z "$DB_PATH" ]; then
     DB_PATH="database/database.sqlite"
   fi
-  if [ ! -f "$DB_PATH" ]; then
-    mkdir -p "$(dirname "$DB_PATH")"
-    touch "$DB_PATH"
+  # Delete old database to force fresh migration
+  if [ -f "$DB_PATH" ]; then
+    rm -f "$DB_PATH"
   fi
+  mkdir -p "$(dirname "$DB_PATH")"
+  touch "$DB_PATH"
 fi
 
-# Run database migrations if possible
-php artisan migrate --force 2>/dev/null || php artisan migrate:refresh --force 2>/dev/null || true
+# Run database migrations with fresh start
+php artisan migrate:fresh --seed --force 2>/dev/null || php artisan migrate --force 2>/dev/null || true
 
 # Start Laravel server on the specified port
 PORT=${PORT:-8000}
