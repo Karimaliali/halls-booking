@@ -4,6 +4,7 @@ use App\Http\Controllers\HallController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/status', [StatusController::class, 'check']);
@@ -31,5 +32,11 @@ Route::middleware('auth:sanctum')->group(function (){
     });
      Route::middleware('role:customer')->get('/my-bookings', [BookingController::class, 'customerBookings']);
       Route::middleware('role:owner')->get('/owner/bookings', [BookingController::class, 'ownerBookings']);
+
+    // Payment routes
+    Route::post('/payments/initiate', [PaymentController::class, 'initiatePayment']);
+    Route::post('/payments/confirm', [PaymentController::class, 'confirmPayment']);
+    Route::get('/payments/{booking_id}', [PaymentController::class, 'getPaymentStatus']);
+    Route::middleware('role:owner')->post('/bookings/{booking_id}/confirm', [PaymentController::class, 'confirmBooking']);
 });
 
