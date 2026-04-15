@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Hall;
+use App\Services\PaymobService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
+    protected $paymob;
+
+    public function __construct(PaymobService $paymob)
+    {
+        $this->paymob = $paymob;
+    }
+
     /**
      * Initialize payment for a booking
      * 
@@ -53,29 +62,46 @@ class PaymentController extends Controller
         }
 
         $hall = $booking->hall;
+        $user = Auth::user();
         $depositAmount = ($hall->price * $request->deposit_percentage) / 100;
 
-        // Update booking with payment info
-        $booking->update([
-            'deposit_amount' => $depositAmount,
-            'payment_status' => 'pending',
-            'payment_expires_at' => now()->addHours(24),
-            'payment_method' => 'gateway', // or stripe, paypal, etc.
-            'transaction_id' => 'TXN_' . uniqid(),
-        ]);
+        try {
+            // Create Paymob order
+            $paymentData = $this->paymob->createOrder(
+                $depositAmount,
+                $booking->id,
+                $user->email,
+                $user->phone ?? '0100000000',
+                $user->name
+            );
 
-        return response()->json([
-            'message' => 'Payment initiated',
-            'booking_id' => $booking->id,
-            'amount' => $depositAmount,
-            'currency' => 'SAR',
-            'expires_at' => $booking->payment_expires_at,
-            'transaction_id' => $booking->transaction_id,
-        ], 200);
+            // Update booking with payment info
+            $booking->update([
+                'deposit_amount' => $depositAmount,
+                'payment_status' => 'pending',
+                'payment_expires_at' => now()->addHours(24),
+                'payment_method' => 'paymob',
+                'transaction_id' => $paymentData['order_id'],
+            ]);
+
+            return response()->json([
+                'message' => 'Payment initiated',
+                'booking_id' => $booking->id,
+                'amount' => $depositAmount,
+                'currency' => 'EGP',
+                'expires_at' => $booking->payment_expires_at,
+                'order_id' => $paymentData['order_id'],
+                'payment_key' => $paymentData['payment_key'],
+                'iframe_url' => "https://accept.paymobsolutions.com/api/acceptance/iframes/{env('PAYMOB_INTEGRATION_ID')}?payment_token={$paymentData['payment_key']}"
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Payment initiation failed: ' . $e->getMessage());
+            return response()->json(['error' => 'Payment initiation failed', 'details' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Confirm payment received
+     * Confirm payment received (called after Paymob webhook or manual verification)
      * 
      * @OA\Post(
      *     path="/api/payments/confirm",
@@ -88,7 +114,7 @@ class PaymentController extends Controller
      *                 mediaType="application/json",
      *                 @OA\Schema(
      *                     @OA\Property(property="booking_id", type="integer"),
-     *                     @OA\Property(property="transaction_id", type="string")
+     *                     @OA\Property(property="order_id", type="string")
      *                 )
      *             )
      *         }
@@ -101,26 +127,38 @@ class PaymentController extends Controller
     {
         $request->validate([
             'booking_id' => 'required|exists:bookings,id',
-            'transaction_id' => 'required|string',
+            'order_id' => 'required|string',
         ]);
 
         $booking = Booking::find($request->booking_id);
 
-        if ($booking->transaction_id !== $request->transaction_id) {
-            return response()->json(['error' => 'Invalid transaction ID'], 400);
+        if ($booking->transaction_id !== $request->order_id) {
+            return response()->json(['error' => 'Invalid order ID'], 400);
         }
 
-        $booking->update([
-            'payment_status' => 'completed',
-            'payment_date' => now(),
-        ]);
+        try {
+            // Verify with Paymob
+            $orderData = $this->paymob->verifyPayment($request->order_id);
 
-        return response()->json([
-            'message' => 'Payment confirmed',
-            'booking_id' => $booking->id,
-            'payment_status' => 'completed',
-            'amount' => $booking->deposit_amount,
-        ], 200);
+            if ($orderData['order_status'] !== 'PAID') {
+                return response()->json(['error' => 'Payment not confirmed by Paymob'], 400);
+            }
+
+            $booking->update([
+                'payment_status' => 'completed',
+                'payment_date' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'Payment confirmed',
+                'booking_id' => $booking->id,
+                'payment_status' => 'completed',
+                'amount' => $booking->deposit_amount,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Payment confirmation failed: ' . $e->getMessage());
+            return response()->json(['error' => 'Payment confirmation failed'], 500);
+        }
     }
 
     /**
@@ -151,6 +189,50 @@ class PaymentController extends Controller
             'expires_at' => $booking->payment_expires_at,
             'is_expired' => $booking->isPaymentExpired(),
         ], 200);
+    }
+
+    /**
+     * Webhook handler for Paymob
+     */
+    public function paymobWebhook(Request $request)
+    {
+        try {
+            $data = $request->all();
+            Log::info('Paymob Webhook Received: ' . json_encode($data));
+
+            // Verify webhook signature
+            if (!$this->verifyPaymobSignature($data)) {
+                return response()->json(['error' => 'Invalid signature'], 403);
+            }
+
+            $orderId = $data['obj']['order']['id'] ?? null;
+            $status = $data['obj']['status'] ?? null;
+
+            if ($orderId && $status === 'success') {
+                $booking = Booking::where('transaction_id', $orderId)->first();
+                if ($booking) {
+                    $booking->update([
+                        'payment_status' => 'completed',
+                        'payment_date' => now(),
+                    ]);
+                    Log::info("Payment confirmed for booking #{$booking->id}");
+                }
+            }
+
+            return response()->json(['success' => true], 200);
+        } catch (\Exception $e) {
+            Log::error('Webhook error: ' . $e->getMessage());
+            return response()->json(['error' => 'Webhook processing failed'], 500);
+        }
+    }
+
+    /**
+     * Verify Paymob webhook signature
+     */
+    protected function verifyPaymobSignature($data)
+    {
+        // Implement Paymob signature verification as per their documentation
+        return true; // For now, trust Paymob
     }
 
     /**

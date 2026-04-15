@@ -13,6 +13,10 @@ Route::get('/halls', [HallController::class, 'index']);
 Route::get('/halls/search', [HallController::class, 'searchApi']);
 Route::get('/check-availability',[BookingController::class, 'check']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Paymob Webhook (no auth needed)
+Route::post('/payments/webhook/paymob', [PaymentController::class, 'paymobWebhook']);
+
 Route::middleware('auth:sanctum')->group(function (){
     //تسجيل الخروج
     Route::post('/logout', [AuthController::class, 'logout']);
