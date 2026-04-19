@@ -29,6 +29,14 @@ fi
 mkdir -p database
 chmod -R 755 storage database 2>/dev/null || true
 
+# Install dependencies if vendor is missing
+if [ ! -f vendor/autoload.php ] && command -v composer >/dev/null 2>&1; then
+  composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist >/dev/null 2>&1 || true
+fi
+
+# Ensure SQLite database file exists
+touch database/database.sqlite
+
 # Run migrations in background without blocking server start
 if command -v php >/dev/null 2>&1; then
   (sleep 2 && php artisan migrate --force >/dev/null 2>&1) &
