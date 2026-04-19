@@ -44,26 +44,16 @@ fi
 
 # Start Laravel built-in server on Railway port
 PORT=${PORT:-8080}
+echo "=== Railway Startup Debug ==="
 echo "Starting PHP built-in server on 0.0.0.0:$PORT"
-echo "PORT=$PORT" >> /tmp/startup.log
-echo "PWD=$(pwd)" >> /tmp/startup.log
-echo "PHP version: $(php --version | head -1)" >> /tmp/startup.log
-echo "Composer available: $(command -v composer >/dev/null && echo 'yes' || echo 'no')" >> /tmp/startup.log
-echo "Vendor exists: $([ -f vendor/autoload.php ] && echo 'yes' || echo 'no')" >> /tmp/startup.log
-echo "Database exists: $([ -f database/database.sqlite ] && echo 'yes' || echo 'no')" >> /tmp/startup.log
+echo "PORT=$PORT"
+echo "PWD=$(pwd)"
+echo "PHP version: $(php --version | head -1)"
+echo "Composer available: $(command -v composer >/dev/null && echo 'yes' || echo 'no')"
+echo "Vendor exists: $([ -f vendor/autoload.php ] && echo 'yes' || echo 'no')"
+echo "Database exists: $([ -f database/database.sqlite ] && echo 'yes' || echo 'no')"
+echo "=== End Debug Info ==="
 
-# Try to start server and log any errors
-php -S 0.0.0.0:"$PORT" -t public public/index.php 2>> /tmp/startup.log &
-SERVER_PID=$!
-echo "Server PID: $SERVER_PID" >> /tmp/startup.log
-
-# Wait a bit and check if server is still running
-sleep 3
-if kill -0 $SERVER_PID 2>/dev/null; then
-    echo "Server started successfully" >> /tmp/startup.log
-    wait $SERVER_PID
-else
-    echo "Server failed to start" >> /tmp/startup.log
-    cat /tmp/startup.log
-    exit 1
-fi
+# Try to start server
+echo "Attempting to start PHP server..."
+php -S 0.0.0.0:"$PORT" -t public public/index.php
