@@ -8,6 +8,7 @@ use App\Services\PaymobService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\DepositPaidNotification;
 
 class PaymentController extends Controller
 {
@@ -65,7 +66,44 @@ class PaymentController extends Controller
         $user = Auth::user();
         $depositAmount = ($hall->price * $request->deposit_percentage) / 100;
 
+        $apiKey = config('services.paymob.api_key');
+        $merchantId = config('services.paymob.merchant_id');
+        $integrationId = config('services.paymob.integration_id');
+
+        // Check if we're in test/demo mode
+        $isTestMode = env('PAYMOB_TEST_MODE', false) || 
+                      empty($apiKey) || in_array($apiKey, ['your_api_key_here', 'YOUR_API_KEY_HERE'], true) ||
+                      empty($merchantId) || in_array($merchantId, ['your_merchant_id', 'YOUR_MERCHANT_ID_HERE'], true) ||
+                      empty($integrationId) || in_array($integrationId, ['your_integration_id', 'YOUR_INTEGRATION_ID_HERE'], true);
+
         try {
+            if ($isTestMode) {
+                // Test/Demo mode: Simulate Paymob response
+                $testOrderId = 'TEST_' . $booking->id . '_' . time();
+                $testPaymentKey = 'test_payment_key_' . bin2hex(random_bytes(16));
+                
+                // Update booking with test payment info
+                $booking->update([
+                    'deposit_amount' => $depositAmount,
+                    'payment_status' => 'pending',
+                    'payment_expires_at' => now()->addHours(24),
+                    'payment_method' => 'paymob_test',
+                    'transaction_id' => $testOrderId,
+                ]);
+
+                return response()->json([
+                    'message' => 'Payment initiated (TEST MODE)',
+                    'booking_id' => $booking->id,
+                    'amount' => $depositAmount,
+                    'currency' => 'EGP',
+                    'expires_at' => $booking->payment_expires_at,
+                    'order_id' => $testOrderId,
+                    'payment_key' => $testPaymentKey,
+                    'iframe_url' => route('payments.test-callback', ['booking_id' => $booking->id, 'status' => 'success']),
+                    'is_test_mode' => true
+                ], 200);
+            }
+
             // Create Paymob order
             $paymentData = $this->paymob->createOrder(
                 $depositAmount,
@@ -92,7 +130,7 @@ class PaymentController extends Controller
                 'expires_at' => $booking->payment_expires_at,
                 'order_id' => $paymentData['order_id'],
                 'payment_key' => $paymentData['payment_key'],
-                'iframe_url' => "https://accept.paymobsolutions.com/api/acceptance/iframes/{env('PAYMOB_INTEGRATION_ID')}?payment_token={$paymentData['payment_key']}"
+                'iframe_url' => "https://accept.paymobsolutions.com/api/acceptance/iframes/" . config('services.paymob.integration_id') . "?payment_token={$paymentData['payment_key']}"
             ], 200);
         } catch (\Exception $e) {
             Log::error('Payment initiation failed: ' . $e->getMessage());
@@ -136,18 +174,32 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Invalid order ID'], 400);
         }
 
+        if ($booking->payment_status === 'completed') {
+            return response()->json(['error' => 'Payment already completed'], 400);
+        }
+
         try {
             // Verify with Paymob
             $orderData = $this->paymob->verifyPayment($request->order_id);
 
-            if ($orderData['order_status'] !== 'PAID') {
+            if (($orderData['order_status'] ?? null) !== 'PAID') {
                 return response()->json(['error' => 'Payment not confirmed by Paymob'], 400);
             }
+
+            $previousStatus = $booking->payment_status;
 
             $booking->update([
                 'payment_status' => 'completed',
                 'payment_date' => now(),
             ]);
+
+            // Notify hall owner about deposit payment only once, after the status changes to completed
+            if ($previousStatus !== 'completed') {
+                $hallOwner = $booking->hall->user;
+                if ($hallOwner) {
+                    $hallOwner->notify(new DepositPaidNotification($booking));
+                }
+            }
 
             return response()->json([
                 'message' => 'Payment confirmed',
@@ -211,10 +263,21 @@ class PaymentController extends Controller
             if ($orderId && $status === 'success') {
                 $booking = Booking::where('transaction_id', $orderId)->first();
                 if ($booking) {
+                    $previousStatus = $booking->payment_status;
+
                     $booking->update([
                         'payment_status' => 'completed',
                         'payment_date' => now(),
+                        'status' => 'pending', // Changed from pending_payment to pending
                     ]);
+
+                    if ($previousStatus !== 'completed') {
+                        $hallOwner = $booking->hall->user;
+                        if ($hallOwner) {
+                            $hallOwner->notify(new DepositPaidNotification($booking));
+                        }
+                    }
+
                     Log::info("Payment confirmed for booking #{$booking->id}");
                 }
             }

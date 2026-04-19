@@ -29,7 +29,7 @@ class NewBookingNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -62,11 +62,15 @@ class NewBookingNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'title' => 'حجز جديد لقاعتك',
+            'message' => 'تم حجز قاعتك "' . $this->booking->hall->name . '" بواسطة ' . $this->booking->user->name,
             'booking_id' => $this->booking->id,
             'hall_name' => $this->booking->hall->name,
             'user_name' => $this->booking->user->name,
-            'booking_date' => $this->booking->booking_date,
+            'booking_date' => $this->booking->booking_date->format('Y-m-d'),
             'status' => $this->booking->status,
+            'type' => 'new_booking',
+            'action_url' => url('/admin/bookings'),
         ];
     }
 }

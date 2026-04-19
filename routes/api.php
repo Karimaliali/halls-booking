@@ -5,6 +5,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/status', [StatusController::class, 'check']);
@@ -12,6 +13,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/halls', [HallController::class, 'index']);
 Route::get('/halls/search', [HallController::class, 'searchApi']);
 Route::get('/check-availability',[BookingController::class, 'check']);
+Route::get('/booked-dates', [BookingController::class, 'getBookedDates']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Paymob Webhook (no auth needed)
@@ -33,9 +35,18 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::middleware('role:owner,admin')->group(function (){
      Route::post('/bookings/{id}/confirm', [BookingController::class, 'confirmPayment']);
      Route::post('/owner/block-date', [BookingController::class, 'blockDate']);
+     Route::post('/bookings/{booking}/confirm-booking', [BookingController::class, 'apiConfirmBooking']);
     });
-     Route::middleware('role:customer')->get('/my-bookings', [BookingController::class, 'customerBookings']);
+    Route::middleware('role:customer')->get('/my-bookings', [BookingController::class, 'customerBookings']);
       Route::middleware('role:owner')->get('/owner/bookings', [BookingController::class, 'ownerBookings']);
+
+    // Notifications routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+    });
 
     // Payment routes
     Route::post('/payments/initiate', [PaymentController::class, 'initiatePayment']);

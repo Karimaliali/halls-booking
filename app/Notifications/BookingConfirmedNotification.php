@@ -29,7 +29,7 @@ class BookingConfirmedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -58,10 +58,14 @@ class BookingConfirmedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'title' => 'تأكيد حجزك',
+            'message' => 'تم تأكيد حجزك للقاعة "' . ($this->booking->hall ? $this->booking->hall->name : 'غير محدد') . '" بتاريخ ' . $this->booking->booking_date->format('Y-m-d'),
             'booking_id' => $this->booking->id,
             'hall_name' => $this->booking->hall ? $this->booking->hall->name : null,
-            'booking_date' => $this->booking->booking_date,
+            'booking_date' => $this->booking->booking_date->format('Y-m-d'),
             'status' => $this->booking->status,
+            'type' => 'booking_confirmed',
+            'action_url' => url('/customer/bookings'),
         ];
     }
 }

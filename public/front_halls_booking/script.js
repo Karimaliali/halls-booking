@@ -219,6 +219,26 @@ document.addEventListener("DOMContentLoaded", () => {
         const grid = document.querySelector(".results-grid");
         if (!grid) return;
         let halls = Array.isArray(response) ? response : response?.data || [];
+        const total = response?.total || halls.length;
+        const displayCount = halls.length;
+        const resultsCount = document.querySelector(".results-count");
+        if (resultsCount) {
+            const h3 = resultsCount.querySelector("h3");
+            const p = resultsCount.querySelector("p");
+            if (!displayCount) {
+                if (h3) h3.textContent = "لا توجد نتائج";
+                if (p) p.textContent = "لم يتم العثور على قاعات مطابقة لبحثك";
+            } else if (total > displayCount) {
+                if (h3)
+                    h3.textContent = `${displayCount} من ${total} قاعة متاحة`;
+                if (p)
+                    p.textContent = `تم العثور على ${total} قاعة تطابق معايير بحثك`;
+            } else {
+                if (h3) h3.textContent = `${displayCount} قاعة متاحة`;
+                if (p)
+                    p.textContent = `تم العثور على ${displayCount} قاعة تطابق معايير بحثك`;
+            }
+        }
         if (!halls || halls.length === 0) {
             grid.innerHTML =
                 '<div style="text-align: center; padding: 40px; color: #666;">لم يتم العثور على قاعات</div>';

@@ -15,7 +15,12 @@ class PaymobService
 
     public function __construct()
     {
-        $this->client = new Client();
+        $verifySsl = env('PAYMOB_VERIFY_SSL', config('app.env') !== 'local');
+        $verifySsl = filter_var($verifySsl, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        $this->client = new Client([
+            'verify' => $verifySsl === null ? config('app.env') !== 'local' : $verifySsl,
+        ]);
         $this->apiKey = config('services.paymob.api_key');
         $this->merchantId = config('services.paymob.merchant_id');
         $this->integrationId = config('services.paymob.integration_id');
@@ -87,7 +92,9 @@ class PaymobService
                         'postal_code' => '00000',
                         'city' => 'Cairo',
                         'country' => 'EG',
-                        'state' => 'EG'
+                        'state' => 'EG',
+                        'street' => 'N/A',
+                        'building' => 'N/A'
                     ],
                     'currency' => 'EGP',
                     'integration_id' => $this->integrationId

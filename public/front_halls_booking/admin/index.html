@@ -1,374 +1,410 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1280" />
-    <title>لوحة إدارة إيفينتي برو</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="dashboard-container admin-dashboard">
-      <div class="container">
-        <!-- Admin Header -->
-        <div class="dashboard-header admin-header">
-          <div class="welcome-message">
-            <h1>مرحباً احمد! 👋</h1>
-            <p>مدير النظام · آخر دخول النهاردة 10:30 صباحاً</p>
-          </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=1280" />
+        <title>لوحة إدارة QAA'A</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="dashboard-container admin-dashboard">
+            <div class="container">
+                <!-- Admin Header -->
+                <div class="dashboard-header admin-header">
+                    <div class="welcome-message">
+                        <h1>مرحباً احمد! 👋</h1>
+                        <p>مدير النظام · آخر دخول النهاردة 10:30 صباحاً</p>
+                    </div>
+                </div>
+
+                <!-- Admin Stats Cards -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fa-regular fa-calendar"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-value">156</span>
+                            <span class="stat-label">إجمالي الحجوزات</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card success">
+                        <div class="stat-icon">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-value">98</span>
+                            <span class="stat-label">حجوزات مؤكدة</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-value">42</span>
+                            <span class="stat-label">تحت المراجعة</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card info">
+                        <div class="stat-icon">
+                            <i class="fa-regular fa-building"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">قاعات مسجلة</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card danger">
+                        <div class="stat-icon">
+                            <i class="fa-regular fa-users"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-value">1,284</span>
+                            <span class="stat-label">إجمالي المستخدمين</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card purple">
+                        <div class="stat-icon">
+                            <i class="fa-regular fa-money-bill"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-value">2.5م</span>
+                            <span class="stat-label">إيرادات الشهر</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions-grid">
+                    <button
+                        class="quick-action-btn primary"
+                        onclick="window.location.href = 'add-hall.html'"
+                    >
+                        <i class="fa-regular fa-plus"></i>
+                        <span>إضافة قاعة جديدة</span>
+                    </button>
+
+                    <button
+                        class="quick-action-btn warning"
+                        onclick="
+                            window.location.href = 'bookings-management.html'
+                        "
+                    >
+                        <i class="fa-regular fa-clock"></i>
+                        <span>مراجعة الحجوزات</span>
+                    </button>
+
+                    <button class="quick-action-btn purple">
+                        <i class="fa-regular fa-chart-line"></i>
+                        <span>التقارير</span>
+                    </button>
+                    <button class="quick-action-btn dark">
+                        <i class="fa-regular fa-gear"></i>
+                        <span>الإعدادات</span>
+                    </button>
+                </div>
+
+                <!-- Main Admin Grid -->
+                <div class="admin-grid">
+                    <!-- Pending Bookings Section -->
+                    <div class="admin-card pending-bookings">
+                        <div class="admin-card-header">
+                            <h3>حجوزات بانتظار المراجعة</h3>
+                            <span class="badge-count">12</span>
+                        </div>
+
+                        <div class="pending-list">
+                            <div class="pending-item">
+                                <div class="user-info">
+                                    <img
+                                        src="https://randomuser.me/api/portraits/women/68.jpg"
+                                        alt="مستخدم"
+                                    />
+                                    <div>
+                                        <h4>نورا عبدالله</h4>
+                                        <p>
+                                            قصر الندى للاحتفالات · 25 فبراير
+                                            2026
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="pending-actions">
+                                    <span class="amount">50,000 ج.م</span>
+                                    <button
+                                        class="action-btn approve"
+                                        title="موافقة"
+                                    >
+                                        <i class="fa-regular fa-check"></i>
+                                    </button>
+                                    <button
+                                        class="action-btn reject"
+                                        title="رفض"
+                                    >
+                                        <i class="fa-regular fa-xmark"></i>
+                                    </button>
+                                    <button
+                                        class="action-btn view"
+                                        title="عرض التفاصيل"
+                                        onclick="
+                                            window.location.href =
+                                                'booking-details.html'
+                                        "
+                                    >
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="pending-item">
+                                <div class="user-info">
+                                    <img
+                                        src="https://randomuser.me/api/portraits/men/52.jpg"
+                                        alt="مستخدم"
+                                    />
+                                    <div>
+                                        <h4>خالد محمد</h4>
+                                        <p>قاعة الكريستال · 5 مارس 2026</p>
+                                    </div>
+                                </div>
+                                <div class="pending-actions">
+                                    <span class="amount">35,000 ج.م</span>
+                                    <button class="action-btn approve">
+                                        <i class="fa-regular fa-check"></i>
+                                    </button>
+                                    <button class="action-btn reject">
+                                        <i class="fa-regular fa-xmark"></i>
+                                    </button>
+                                    <button
+                                        class="action-btn view"
+                                        onclick="
+                                            window.location.href =
+                                                'booking-details.html'
+                                        "
+                                    >
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="pending-item">
+                                <div class="user-info">
+                                    <img
+                                        src="https://randomuser.me/api/portraits/women/45.jpg"
+                                        alt="مستخدم"
+                                    />
+                                    <div>
+                                        <h4>سارة أحمد</h4>
+                                        <p>قاعة فينيسيا · 12 مارس 2026</p>
+                                    </div>
+                                </div>
+                                <div class="pending-actions">
+                                    <span class="amount">70,000 ج.م</span>
+                                    <button class="action-btn approve">
+                                        <i class="fa-regular fa-check"></i>
+                                    </button>
+                                    <button class="action-btn reject">
+                                        <i class="fa-regular fa-xmark"></i>
+                                    </button>
+                                    <button
+                                        class="action-btn view"
+                                        onclick="
+                                            window.location.href =
+                                                'booking-details.html'
+                                        "
+                                    >
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <a href="reses.html" class="view-all-link"
+                                >عرض جميع الحجوزات
+                                <i class="fa-regular fa-arrow-left"></i
+                            ></a>
+                        </div>
+                    </div>
+
+                    <!-- Halls Management Section -->
+                    <div class="admin-card halls-management">
+                        <div class="admin-card-header">
+                            <h3>إدارة القاعات</h3>
+                            <button
+                                class="add-hall-btn"
+                                onclick="window.location.href = 'add-hall.html'"
+                            >
+                                <i class="fa-regular fa-plus"></i> إضافة
+                            </button>
+                        </div>
+
+                        <div class="halls-list">
+                            <div class="hall-item">
+                                <div class="hall-info">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=100&q=80"
+                                        alt="قاعة"
+                                    />
+                                    <div>
+                                        <h4>قصر الندى للاحتفالات</h4>
+                                        <p>المنصورة · 500 ضيف</p>
+                                    </div>
+                                </div>
+                                <div class="hall-status">
+                                    <span class="status active">نشط</span>
+                                </div>
+                                <div class="hall-actions">
+                                    <button
+                                        class="icon-btn edit"
+                                        title="تعديل"
+                                        onclick="
+                                            window.location.href =
+                                                'edit-hall.html'
+                                        "
+                                    >
+                                        <i
+                                            class="fa-regular fa-pen-to-square"
+                                        ></i>
+                                    </button>
+                                    <button class="icon-btn delete" title="حذف">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="hall-item">
+                                <div class="hall-info">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=100&q=80"
+                                        alt="قاعة"
+                                    />
+                                    <div>
+                                        <h4>قاعة الكريستال</h4>
+                                        <p>جدة · 200 ضيف</p>
+                                    </div>
+                                </div>
+                                <div class="hall-status">
+                                    <span class="status active">نشط</span>
+                                </div>
+                                <div class="hall-actions">
+                                    <button
+                                        class="icon-btn edit"
+                                        onclick="
+                                            window.location.href =
+                                                'edit-hall.html'
+                                        "
+                                    >
+                                        <i
+                                            class="fa-regular fa-pen-to-square"
+                                        ></i>
+                                    </button>
+                                    <button class="icon-btn delete">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="hall-item">
+                                <div class="hall-info">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=100&q=80"
+                                        alt="قاعة"
+                                    />
+                                    <div>
+                                        <h4>قاعة فينيسيا</h4>
+                                        <p>الخبر · 800 ضيف</p>
+                                    </div>
+                                </div>
+                                <div class="hall-status">
+                                    <span class="status inactive">غير نشط</span>
+                                </div>
+                                <div class="hall-actions">
+                                    <button
+                                        class="icon-btn edit"
+                                        onclick="
+                                            window.location.href =
+                                                'edit-hall.html'
+                                        "
+                                    >
+                                        <i
+                                            class="fa-regular fa-pen-to-square"
+                                        ></i>
+                                    </button>
+                                    <button class="icon-btn delete">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Chart (Simplified) -->
+                    <div class="admin-card revenue-card">
+                        <div class="admin-card-header">
+                            <h3>الإيرادات الشهرية</h3>
+                            <select class="chart-period">
+                                <option>آخر 6 شهور</option>
+                                <option>آخر 12 شهر</option>
+                                <option>السنة دي</option>
+                            </select>
+                        </div>
+
+                        <div class="chart-bars">
+                            <div class="bar-item">
+                                <span>سبتمبر</span>
+                                <div class="bar">
+                                    <div class="fill" style="height: 65%"></div>
+                                </div>
+                                <span>650k</span>
+                            </div>
+                            <div class="bar-item">
+                                <span>أكتوبر</span>
+                                <div class="bar">
+                                    <div class="fill" style="height: 80%"></div>
+                                </div>
+                                <span>800k</span>
+                            </div>
+                            <div class="bar-item">
+                                <span>نوفمبر</span>
+                                <div class="bar">
+                                    <div class="fill" style="height: 75%"></div>
+                                </div>
+                                <span>750k</span>
+                            </div>
+                            <div class="bar-item">
+                                <span>ديسمبر</span>
+                                <div class="bar">
+                                    <div class="fill" style="height: 95%"></div>
+                                </div>
+                                <span>950k</span>
+                            </div>
+                            <div class="bar-item">
+                                <span>يناير</span>
+                                <div class="bar">
+                                    <div class="fill" style="height: 85%"></div>
+                                </div>
+                                <span>850k</span>
+                            </div>
+                            <div class="bar-item">
+                                <span>فبراير</span>
+                                <div class="bar">
+                                    <div class="fill" style="height: 70%"></div>
+                                </div>
+                                <span>700k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Admin Stats Cards -->
-        <div class="admin-stats-grid">
-          <div class="admin-stat-card primary">
-            <div class="stat-icon">
-              <i class="fa-regular fa-calendar"></i>
-            </div>
-            <div class="stat-details">
-              <span class="stat-value">156</span>
-              <span class="stat-label">إجمالي الحجوزات</span>
-            </div>
-          </div>
-          <div class="admin-stat-card success">
-            <div class="stat-icon">
-              <i class="fa-regular fa-circle-check"></i>
-            </div>
-            <div class="stat-details">
-              <span class="stat-value">98</span>
-              <span class="stat-label">حجوزات مؤكدة</span>
-            </div>
-          </div>
-          <div class="admin-stat-card warning">
-            <div class="stat-icon">
-              <i class="fa-regular fa-clock"></i>
-            </div>
-            <div class="stat-details">
-              <span class="stat-value">42</span>
-              <span class="stat-label">تحت المراجعة</span>
-            </div>
-          </div>
-          <div class="admin-stat-card info">
-            <div class="stat-icon">
-              <i class="fa-regular fa-building"></i>
-            </div>
-            <div class="stat-details">
-              <span class="stat-value">24</span>
-              <span class="stat-label">قاعات مسجلة</span>
-            </div>
-          </div>
-          <div class="admin-stat-card danger">
-            <div class="stat-icon">
-              <i class="fa-regular fa-users"></i>
-            </div>
-            <div class="stat-details">
-              <span class="stat-value">1,284</span>
-              <span class="stat-label">إجمالي المستخدمين</span>
-            </div>
-          </div>
-          <div class="admin-stat-card purple">
-            <div class="stat-icon">
-              <i class="fa-regular fa-money-bill"></i>
-            </div>
-            <div class="stat-details">
-              <span class="stat-value">2.5م</span>
-              <span class="stat-label">إيرادات الشهر</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="quick-actions-grid">
-          <button
-            class="quick-action-btn primary"
-            onclick="window.location.href = 'add-hall.html'"
-          >
-            <i class="fa-regular fa-plus"></i>
-            <span>إضافة قاعة جديدة</span>
-          </button>
-
-          <button
-            class="quick-action-btn warning"
-            onclick="window.location.href = 'bookings-management.html'"
-          >
-            <i class="fa-regular fa-clock"></i>
-            <span>مراجعة الحجوزات</span>
-          </button>
-
-          <button class="quick-action-btn purple">
-            <i class="fa-regular fa-chart-line"></i>
-            <span>التقارير</span>
-          </button>
-          <button class="quick-action-btn dark">
-            <i class="fa-regular fa-gear"></i>
-            <span>الإعدادات</span>
-          </button>
-        </div>
-
-        <!-- Main Admin Grid -->
-        <div class="admin-grid">
-          <!-- Pending Bookings Section -->
-          <div class="admin-card pending-bookings">
-            <div class="admin-card-header">
-              <h3>حجوزات بانتظار المراجعة</h3>
-              <span class="badge-count">12</span>
-            </div>
-
-            <div class="pending-list">
-              <div class="pending-item">
-                <div class="user-info">
-                  <img
-                    src="https://randomuser.me/api/portraits/women/68.jpg"
-                    alt="مستخدم"
-                  />
-                  <div>
-                    <h4>نورا عبدالله</h4>
-                    <p>قصر الندى للاحتفالات · 25 فبراير 2026</p>
-                  </div>
-                </div>
-                <div class="pending-actions">
-                  <span class="amount">50,000 ج.م</span>
-                  <button class="action-btn approve" title="موافقة">
-                    <i class="fa-regular fa-check"></i>
-                  </button>
-                  <button class="action-btn reject" title="رفض">
-                    <i class="fa-regular fa-xmark"></i>
-                  </button>
-                  <button
-                    class="action-btn view"
-                    title="عرض التفاصيل"
-                    onclick="window.location.href = 'booking-details.html'"
-                  >
-                    <i class="fa-regular fa-eye"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="pending-item">
-                <div class="user-info">
-                  <img
-                    src="https://randomuser.me/api/portraits/men/52.jpg"
-                    alt="مستخدم"
-                  />
-                  <div>
-                    <h4>خالد محمد</h4>
-                    <p>قاعة الكريستال · 5 مارس 2026</p>
-                  </div>
-                </div>
-                <div class="pending-actions">
-                  <span class="amount">35,000 ج.م</span>
-                  <button class="action-btn approve">
-                    <i class="fa-regular fa-check"></i>
-                  </button>
-                  <button class="action-btn reject">
-                    <i class="fa-regular fa-xmark"></i>
-                  </button>
-                  <button
-                    class="action-btn view"
-                    onclick="window.location.href = 'booking-details.html'"
-                  >
-                    <i class="fa-regular fa-eye"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="pending-item">
-                <div class="user-info">
-                  <img
-                    src="https://randomuser.me/api/portraits/women/45.jpg"
-                    alt="مستخدم"
-                  />
-                  <div>
-                    <h4>سارة أحمد</h4>
-                    <p>قاعة فينيسيا · 12 مارس 2026</p>
-                  </div>
-                </div>
-                <div class="pending-actions">
-                  <span class="amount">70,000 ج.م</span>
-                  <button class="action-btn approve">
-                    <i class="fa-regular fa-check"></i>
-                  </button>
-                  <button class="action-btn reject">
-                    <i class="fa-regular fa-xmark"></i>
-                  </button>
-                  <button
-                    class="action-btn view"
-                    onclick="window.location.href = 'booking-details.html'"
-                  >
-                    <i class="fa-regular fa-eye"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="card-footer">
-              <a href="reses.html" class="view-all-link"
-                >عرض جميع الحجوزات <i class="fa-regular fa-arrow-left"></i
-              ></a>
-            </div>
-          </div>
-
-          <!-- Halls Management Section -->
-          <div class="admin-card halls-management">
-            <div class="admin-card-header">
-              <h3>إدارة القاعات</h3>
-              <button
-                class="add-hall-btn"
-                onclick="window.location.href = 'add-hall.html'"
-              >
-                <i class="fa-regular fa-plus"></i> إضافة
-              </button>
-            </div>
-
-            <div class="halls-list">
-              <div class="hall-item">
-                <div class="hall-info">
-                  <img
-                    src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=100&q=80"
-                    alt="قاعة"
-                  />
-                  <div>
-                    <h4>قصر الندى للاحتفالات</h4>
-                    <p>المنصورة · 500 ضيف</p>
-                  </div>
-                </div>
-                <div class="hall-status">
-                  <span class="status active">نشط</span>
-                </div>
-                <div class="hall-actions">
-                  <button
-                    class="icon-btn edit"
-                    title="تعديل"
-                    onclick="window.location.href = 'edit-hall.html'"
-                  >
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                  <button class="icon-btn delete" title="حذف">
-                    <i class="fa-regular fa-trash-can"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="hall-item">
-                <div class="hall-info">
-                  <img
-                    src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=100&q=80"
-                    alt="قاعة"
-                  />
-                  <div>
-                    <h4>قاعة الكريستال</h4>
-                    <p>جدة · 200 ضيف</p>
-                  </div>
-                </div>
-                <div class="hall-status">
-                  <span class="status active">نشط</span>
-                </div>
-                <div class="hall-actions">
-                  <button
-                    class="icon-btn edit"
-                    onclick="window.location.href = 'edit-hall.html'"
-                  >
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                  <button class="icon-btn delete">
-                    <i class="fa-regular fa-trash-can"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="hall-item">
-                <div class="hall-info">
-                  <img
-                    src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=100&q=80"
-                    alt="قاعة"
-                  />
-                  <div>
-                    <h4>قاعة فينيسيا</h4>
-                    <p>الخبر · 800 ضيف</p>
-                  </div>
-                </div>
-                <div class="hall-status">
-                  <span class="status inactive">غير نشط</span>
-                </div>
-                <div class="hall-actions">
-                  <button
-                    class="icon-btn edit"
-                    onclick="window.location.href = 'edit-hall.html'"
-                  >
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                  <button class="icon-btn delete">
-                    <i class="fa-regular fa-trash-can"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Revenue Chart (Simplified) -->
-          <div class="admin-card revenue-card">
-            <div class="admin-card-header">
-              <h3>الإيرادات الشهرية</h3>
-              <select class="chart-period">
-                <option>آخر 6 شهور</option>
-                <option>آخر 12 شهر</option>
-                <option>السنة دي</option>
-              </select>
-            </div>
-
-            <div class="chart-bars">
-              <div class="bar-item">
-                <span>سبتمبر</span>
-                <div class="bar">
-                  <div class="fill" style="height: 65%"></div>
-                </div>
-                <span>650k</span>
-              </div>
-              <div class="bar-item">
-                <span>أكتوبر</span>
-                <div class="bar">
-                  <div class="fill" style="height: 80%"></div>
-                </div>
-                <span>800k</span>
-              </div>
-              <div class="bar-item">
-                <span>نوفمبر</span>
-                <div class="bar">
-                  <div class="fill" style="height: 75%"></div>
-                </div>
-                <span>750k</span>
-              </div>
-              <div class="bar-item">
-                <span>ديسمبر</span>
-                <div class="bar">
-                  <div class="fill" style="height: 95%"></div>
-                </div>
-                <span>950k</span>
-              </div>
-              <div class="bar-item">
-                <span>يناير</span>
-                <div class="bar">
-                  <div class="fill" style="height: 85%"></div>
-                </div>
-                <span>850k</span>
-              </div>
-              <div class="bar-item">
-                <span>فبراير</span>
-                <div class="bar">
-                  <div class="fill" style="height: 70%"></div>
-                </div>
-                <span>700k</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="../bootstrap.js"></script>
-    <script src="script.js"></script>
-  </body>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="../bootstrap.js"></script>
+        <script src="script.js"></script>
+    </body>
 </html>

@@ -269,11 +269,15 @@
                                 <i class="fas fa-user"></i> {{ auth()->user()->name }} <i class="fas fa-chevron-down"></i>
                             </button>
                             <div class="user-dropdown-menu" id="userDropdown">
-                                @if(auth()->user()->role === 'customer')
+                                @if(auth()->user()->role === 'admin')
+                                    <a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line"></i> لوحة التحكم</a>
+                                    <a href="{{ route('owner.withdrawals') }}"><i class="fas fa-money-bill-wave"></i> السحوبات</a>
+                                @elseif(auth()->user()->role === 'customer')
                                     <a href="{{ route('customer.bookings') }}"><i class="fas fa-calendar-check"></i> حجوزاتي</a>
                                 @elseif(auth()->user()->role === 'owner')
                                     <a href="{{ route('owner.halls') }}"><i class="fas fa-home"></i> قاعاتي</a>
                                     <a href="{{ route('owner.bookings') }}"><i class="fas fa-list"></i> الحجوزات</a>
+                                    <a href="{{ route('owner.withdrawals') }}"><i class="fas fa-money-bill-wave"></i> السحوبات</a>
                                 @endif
                                 <a href="{{ route('profile.edit') }}"><i class="fas fa-cog"></i> الحساب</a>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> خروج</a>

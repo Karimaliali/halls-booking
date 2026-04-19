@@ -39,8 +39,52 @@
             box-shadow: 0 12px 28px rgba(212, 175, 55, 0.4) !important;
         }
 
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr);
+            grid-template-rows: repeat(4, minmax(160px, 1fr));
+            gap: 16px;
+            align-items: stretch;
+            min-height: 680px;
+        }
+
+        .main-image {
+            grid-row: span 4;
+            overflow: hidden;
+            border-radius: 24px;
+            min-width: 0;
+            background: #f8fafc;
+            min-height: 100%;
+        }
+
+        .image-side {
+            overflow: hidden;
+            border-radius: 24px;
+            background: #f8fafc;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
         .gallery-grid img {
+            width: 100%;
+            height: 100%;
+            display: block;
             cursor: pointer;
+            border-radius: 24px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .main-image img {
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .image-side img {
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            background: transparent;
         }
 
         .details-section {
@@ -132,8 +176,11 @@
 
         .booking-card label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 700;
+            color: #0f172a;
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
         }
 
         .booking-card .form-control {
@@ -144,11 +191,179 @@
             background: #f9fafb;
             color: #152b4f;
             outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
         }
 
         .booking-card .form-control:focus {
-            border-color: rgba(212, 175, 55, 0.7);
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+            border-color: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+            background: #ffffff;
+        }
+
+        .booking-card .date-input-wrap {
+            position: relative;
+        }
+
+        .booking-card .booking-date-input {
+            width: 100%;
+            padding: 16px 56px 16px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+
+        .booking-card .booking-date-input:focus {
+            border-color: rgba(59, 130, 246, 0.9);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+        }
+
+        .booking-card .date-input-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2563eb;
+            pointer-events: none;
+            font-size: 1.1rem;
+        }
+
+        .custom-calendar {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 24px;
+            background: #ffffff;
+            border: 1px solid rgba(36, 45, 57, 0.08);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .custom-calendar .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .custom-calendar .calendar-title {
+            font-weight: 700;
+            color: #111827;
+            font-size: 0.98rem;
+        }
+
+        .custom-calendar .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .custom-calendar .calendar-nav button {
+            width: 36px;
+            height: 36px;
+            border-radius: 14px;
+            border: 1px solid rgba(36, 45, 57, 0.12);
+            background: #f8fafc;
+            color: #1b365d;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .custom-calendar .calendar-nav button:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+
+        .custom-calendar .calendar-nav button:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            border-color: rgba(148, 163, 184, 0.4);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .custom-calendar .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .custom-calendar .calendar-weekday {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .custom-calendar .calendar-day,
+        .custom-calendar .calendar-empty {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 44px;
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #0f172a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .custom-calendar .calendar-day:hover:not(.disabled):not(.selected) {
+            transform: translateY(-1px);
+            background: #eef2ff;
+        }
+
+        .custom-calendar .calendar-day.selected {
+            background: linear-gradient(135deg, #d4af37 0%, #f59e0b 100%);
+            color: #1b365d;
+            border-color: transparent;
+        }
+
+        .custom-calendar .calendar-day.disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.72;
+        }
+
+        .custom-calendar .calendar-day.today {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .custom-calendar .calendar-footer {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 16px;
+            color: #475569;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .custom-calendar .calendar-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .booking-card .booking-date-input::-webkit-calendar-picker-indicator,
+        .booking-card .booking-date-input::-webkit-inner-spin-button,
+        .booking-card .booking-date-input::-webkit-clear-button {
+            display: none;
+            -webkit-appearance: none;
+        }
+
+        .booking-card .booking-date-input::-ms-clear,
+        .booking-card .booking-date-input::-ms-expand {
+            display: none;
         }
 
         .file-upload {
@@ -505,7 +720,7 @@
                         }
                     }
 
-                    // fallback آخر للـ main_image
+                    // إضافة الصورة الرئيسية إلى بداية المعرض دائمًا
                     $mainImageRaw = $hall->main_image ?? null;
                     if (is_array($mainImageRaw)) {
                         $mainImageRaw = $mainImageRaw[0] ?? null;
@@ -516,6 +731,14 @@
                         }
                     }
 
+                    if (!empty($mainImageRaw)) {
+                        // إضافة الصورة الرئيسية في البداية إذا لم تكن موجودة بالفعل
+                        if (!in_array($mainImageRaw, $galleryImages)) {
+                            array_unshift($galleryImages, $mainImageRaw);
+                        }
+                    }
+
+                    // fallback آخر للـ main_image إذا لم توجد أي صور
                     if (empty($galleryImages) && !empty($mainImageRaw)) {
                         $galleryImages = [$mainImageRaw];
                     }
@@ -581,31 +804,20 @@
                     }
 
                     $mainImageUrl = $imageUrl($mainImage) ?: $placeholder;
+                    $sideImageUrls = array_slice($galleryUrls, 1, 4);
+                    while (count($sideImageUrls) < 4) {
+                        $sideImageUrls[] = $placeholder;
+                    }
                 @endphp
 
-                <script>
-                    const imageUrls = @json($galleryUrls);
-                    window.imageUrls = imageUrls;
-                </script>
                 <div class="main-image">
-                    <img src="{{ $mainImageUrl }}" alt="{{ $hall->name ?? 'قاعة' }}" data-src="{{ $mainImageUrl }}" onclick="openLightbox({{ json_encode($mainImageUrl) }})" />
+                    <img src="{{ $mainImageUrl }}" alt="{{ $hall->name ?? 'قاعة' }}" data-src="{{ $mainImageUrl }}" onclick="window.openLightbox(this.getAttribute('data-src'))" style="cursor: pointer;" />
                 </div>
-                @foreach($sideImages as $index => $img)
-                    @php $sideUrl = $imageUrl($img) ?: $placeholder; @endphp
+                @foreach($sideImageUrls as $index => $sideUrl)
                     <div class="image-side">
-                        <img src="{{ $sideUrl }}" alt="{{ $hall->name ?? 'قاعة' }} - صورة {{ $index + 1 }}" data-src="{{ $sideUrl }}" onclick="openLightbox({{ json_encode($sideUrl) }})" />
+                        <img src="{{ $sideUrl }}" alt="{{ $hall->name ?? 'قاعة' }} - صورة {{ $index + 1 }}" data-src="{{ $sideUrl }}" onclick="window.openLightbox(this.getAttribute('data-src'))" style="cursor: pointer;" />
                     </div>
                 @endforeach
-                @for($i = count($sideImages); $i < 4; $i++)
-                    <div class="image-side">
-                        <img
-                            src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80"
-                            alt="صورة إضافية"
-                            data-src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80"
-                            onclick="openLightbox({{ json_encode('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80') }})"
-                        />
-                    </div>
-                @endfor
             </div>
         </div>
     </section>
@@ -772,16 +984,20 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group date-picker-group">
                                 <label>تاريخ الحجز</label>
-                                <input
-                                    type="date"
-                                    id="bookingDateInput"
-                                    class="form-control"
-                                    required
-                                />
+                                <div class="date-input-wrap">
+                                    <input
+                                        type="date"
+                                        id="bookingDateInput"
+                                        class="form-control booking-date-input"
+                                        required
+                                    />
+                                    <span class="date-input-icon"><i class="fa fa-calendar-alt"></i></span>
+                                </div>
                                 <small class="text-muted">اختر التاريخ المناسب للحجز.</small>
                             </div>
+                            <div class="custom-calendar" id="bookingCalendar"></div>
 
                             @auth
                                 @if(Auth::user()->role === 'customer')
@@ -1044,12 +1260,7 @@
                     <div class="step-connector"></div>
                     <div class="step" data-step="2">
                         <div class="step-number">2</div>
-                        <div class="step-title">الوثائق</div>
-                    </div>
-                    <div class="step-connector"></div>
-                    <div class="step" data-step="3">
-                        <div class="step-number">3</div>
-                        <div class="step-title">الدفع والتأكيد</div>
+                        <div class="step-title">الوثائق والتأكيد</div>
                     </div>
                 </div>
 
@@ -1188,108 +1399,12 @@
                             </div>
 
                         </div>
-                    </div>
-
-                    <!-- Step 3: Payment & Confirmation -->
-                    <div class="booking-step" id="step3">
-                        <div class="step-header">
-                            <i class="fa fa-credit-card"></i>
-                            <h4>الدفع والتأكيد</h4>
-                            <p>يرجى إتمام عملية الدفع وتأكيد الحجز</p>
-                        </div>
-
-                        <div class="payment-summary">
-                            <div class="summary-card">
-                                <h5>ملخص الحجز</h5>
-                                <div class="summary-row">
-                                    <span>اسم القاعة:</span>
-                                    <strong>{{ $hall->name ?? 'غير محدد' }}</strong>
-                                </div>
-                                <div class="summary-row">
-                                    <span>التاريخ:</span>
-                                    <strong id="summaryDate">لم يتم تحديد</strong>
-                                </div>
-                                <div class="summary-row">
-                                    <span>السعر لليلة الواحدة:</span>
-                                    <strong>{{ number_format($hall->price ?? 0) }} ج.م</strong>
-                                </div>
-                                <div class="summary-row total">
-                                    <span>إجمالي المبلغ:</span>
-                                    <strong>{{ number_format($hall->price ?? 0) }} ج.م</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="deposit-info enhanced">
-                            <div class="deposit-notice">
-                                <i class="fa fa-info-circle"></i>
-                                <div>
-                                    <strong>تنبيه مهم:</strong> يجب تحويل عربون جدية حجز لا يقل عن <strong>10%</strong> من إجمالي المبلغ.
-                                </div>
-                            </div>
-                            <div class="price-calc">
-                                <div class="calc-row">
-                                    <span>المبلغ المطلوب للعربون:</span>
-                                    <span id="depositAmount" class="amount">0 ج.م</span>
-                                </div>
-                                <div class="calc-row">
-                                    <span>المبلغ المتبقي:</span>
-                                    <span id="remainingAmount" class="amount">0 ج.م</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="payment-instructions">
-                            <h5>تعليمات الدفع</h5>
-                            <div class="instructions-list">
-                                <div class="instruction-item">
-                                    <i class="fa fa-check-circle"></i>
-                                    <span>قم بتحويل العربون إلى الحساب البنكي المحدد</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <i class="fa fa-check-circle"></i>
-                                    <span>احرص على الاحتفاظ برقم العملية</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <i class="fa fa-check-circle"></i>
-                                    <span>ارفع صورة إيصال الدفع في الحقل أدناه</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="receiptImage">
-                                <i class="fa fa-receipt"></i>
-                                إيصال تحويل العربون
-                            </label>
-                            <div class="file-upload enhanced accent">
-                                <input
-                                    type="file"
-                                    id="receiptImage"
-                                    name="receiptImage"
-                                    accept="image/*"
-                                    required
-                                />
-                                <div class="upload-area">
-                                    <i class="fa fa-receipt"></i>
-                                    <span class="upload-text">رفع صورة إيصال الدفع</span>
-                                    <span class="upload-subtext">صورة واضحة لإيصال التحويل</span>
-                                </div>
-                                <div class="file-preview" id="receiptPreview"></div>
-                            </div>
-                            <div class="file-requirements">
-                                <small>
-                                    <i class="fa fa-info-circle"></i>
-                                    يجب أن تكون الصورة واضحة وتشمل تفاصيل التحويل
-                                </small>
-                            </div>
-                        </div>
 
                         <div class="terms-agreement">
                             <label class="checkbox-container">
                                 <input type="checkbox" id="termsAgreement" required />
                                 <span class="checkmark"></span>
-                                أوافق على <a href="#" target="_blank">الشروط والأحكام</a> و <a href="#" target="_blank">سياسة الخصوصية</a>
+                                أوافق على <a href="#" target="_blank">الشروط والأحكام</a> و <a href="#" target="_blank">سياسة الخصوصية</a> و <a href="#" target="_blank">سياسة الاسترداد</a>
                             </label>
                         </div>
                     </div>
@@ -1304,45 +1419,102 @@
                             التالي
                             <i class="fa fa-arrow-left"></i>
                         </button>
-                        <button type="submit" class="btn btn-confirm-final btn-confirm-final" style="display: none;">
-                            <i class="fa fa-paper-plane"></i>
-                            تأكيد طلب الحجز
+                        <button type="submit" class="btn btn-success btn-book" style="display: none;">
+                            <i class="fa fa-check-circle"></i>
+                            احجز الآن
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        @push('scripts')
-            <script>
-                // Simple Lightbox Handler - محسّن
-                let currentLightboxIndex = 0;
-                let currentLightboxZoom = 1;
-                const minLightboxZoom = 1;
-                const maxLightboxZoom = 3;
-                const lightboxZoomStep = 0.25;
+    </style>
 
-                // Drag variables
-                let isDragging = false;
-                let startX, startY, dragX = 0, dragY = 0;
+    <script>
+        console.log('🚀 Lightbox script loaded');
+
+        // Initialize immediately
+        let imageUrls = [];
+        try {
+            imageUrls = @json($galleryUrls);
+            console.log('Image URLs loaded:', imageUrls);
+        } catch (error) {
+            console.error('❌ Error loading image URLs:', error);
+            imageUrls = [];
+        }
+        window.imageUrls = imageUrls;
+
+        // Simple Lightbox Handler - محسّن
+        let currentLightboxIndex = 0;
+        let currentLightboxZoom = 1;
+        const minLightboxZoom = 1;
+        const maxLightboxZoom = 3;
+        const lightboxZoomStep = 0.25;
+        const lightboxAutoHideDelay = 3000;
+        let toolbarHideTimeout;
+
+        // Drag variables
+        let isDragging = false;
+        let startX, startY, dragX = 0, dragY = 0;
+
+        function resetLightboxAutoHide() {
+            const toolbar = document.getElementById('lightboxToolbar');
+            const header = document.querySelector('.lightbox-header');
+            const navButtons = document.querySelectorAll('.lightbox-nav');
+
+            if (toolbar) {
+                toolbar.classList.remove('auto-hide');
+                toolbar.classList.remove('hidden');
+            }
+            if (header) {
+                header.classList.remove('auto-hide');
+            }
+            navButtons.forEach(btn => {
+                btn.classList.remove('auto-hide');
+            });
+
+            clearTimeout(toolbarHideTimeout);
+            toolbarHideTimeout = setTimeout(() => {
+                if (toolbar) {
+                    toolbar.classList.add('auto-hide');
+                }
+                if (header) {
+                    header.classList.add('auto-hide');
+                }
+                navButtons.forEach(btn => {
+                    btn.classList.add('auto-hide');
+                });
+            }, lightboxAutoHideDelay);
+        }
 
                 function updateLightboxImage() {
+                    console.log('🔄 updateLightboxImage called');
+
                     const img = document.getElementById('lightboxImage');
+                    console.log('Lightbox image element:', img);
+
                     if (!img) {
+                        console.error('❌ Lightbox image element not found');
                         return;
                     }
 
-                    if (!Array.isArray(imageUrls) || !imageUrls.length) {
+                    if (!Array.isArray(window.imageUrls) || !window.imageUrls.length) {
                         console.warn('⚠️ updateLightboxImage: no imageUrls available');
+                        console.log('window.imageUrls:', window.imageUrls);
                         img.src = '';
                     } else {
-                        img.src = imageUrls[currentLightboxIndex] || imageUrls[0] || '';
+                        console.log('✅ Using imageUrls:', window.imageUrls);
+                        img.src = window.imageUrls[currentLightboxIndex] || window.imageUrls[0] || '';
+                        console.log('Setting image src to:', img.src);
                     }
 
                     // Reset drag position
                     dragX = 0;
                     dragY = 0;
                     img.style.transform = `translate(-50%, -50%) scale(${currentLightboxZoom})`;
+                    
+                    // Update cursor - always show grab hand for dragging
+                    img.style.cursor = 'grab';
                     
                     // تحديث عرض رقم الصورة الحالية
                     const currentImageNum = document.getElementById('currentImageNum');
@@ -1363,13 +1535,18 @@
                     updateActiveThumbnail();
                 }
 
-                function openLightbox(src) {
+                window.openLightbox = function openLightbox(src) {
+                    console.log('🚀 openLightbox called with src:', src);
+
                     if (!src) {
                         console.error('❌ openLightbox called without a valid src');
                         return;
                     }
 
                     console.log('🔄 Opening Lightbox with src:', src);
+
+                    // Scroll to top when opening lightbox
+                    window.scrollTo(0, 0);
 
                     if (!window.imageUrls || !Array.isArray(window.imageUrls) || !window.imageUrls.length) {
                         console.warn('⚠️ imageUrls is empty or unavailable, using clicked image src as fallback');
@@ -1392,11 +1569,67 @@
                     // تحديث عدد الصور الكلي
                     const totalImagesNum = document.getElementById('totalImagesNum');
                     if (totalImagesNum) {
-                        totalImagesNum.textContent = imageUrls.length;
+                        totalImagesNum.textContent = window.imageUrls.length;
                     }
                     
                     // إنشاء المعاينات
                     createThumbnails();
+                    
+                    // إظهار التول بار (قد يكون في وضع الإخفاء من الفتح السابق)
+                    const toolbar = document.getElementById('lightboxToolbar');
+                    const header = document.querySelector('.lightbox-header');
+                    const navButtons = document.querySelectorAll('.lightbox-nav');
+
+                    // إزالة class auto-hide من كل العناصر عشان تظهر
+                    if (toolbar) {
+                        toolbar.classList.remove('auto-hide');
+                        toolbar.classList.remove('hidden');
+                    }
+                    if (header) {
+                        header.classList.remove('auto-hide');
+                    }
+                    navButtons.forEach(btn => {
+                        btn.classList.remove('auto-hide');
+                    });
+
+                    // تفعيل مهلة الإخفاء التلقائي وإعادة ضبطها عند الحاجة
+                    resetLightboxAutoHide();
+                    
+                    // إضافة منطق إخفاء/إظهار التولبار عند تحريك الماوس
+                    if (modal && !modal.dataset.lightboxListenersAttached) {
+                        modal.dataset.lightboxListenersAttached = 'true';
+
+                        modal.addEventListener('mousemove', function(e) {
+                            // عند تحريك الماوس، نعيد تفعيل مهلة الإخفاء
+                            resetLightboxAutoHide();
+                        });
+                        
+                        modal.addEventListener('click', function(e) {
+                            if (e.target.closest('.lightbox-nav') ||
+                                e.target.closest('.lightbox-toolbar') ||
+                                e.target.closest('.lightbox-header') ||
+                                e.target.closest('#thumbnailsPanel') ||
+                                e.target.closest('#thumbnailsBtn') ||
+                                e.target.closest('.toolbar-btn') ||
+                                e.target.closest('.close-modal')) {
+                                resetLightboxAutoHide();
+                            }
+                        });
+
+                        modal.addEventListener('mouseenter', function() {
+                            const toolbar = document.getElementById('lightboxToolbar');
+                            if (toolbar) {
+                                toolbar.classList.remove('hidden');
+                            }
+                        });
+                        
+                        modal.addEventListener('mouseleave', function() {
+                            const toolbar = document.getElementById('lightboxToolbar');
+                            if (toolbar) {
+                                toolbar.classList.add('hidden');
+                            }
+                        });
+                    }
                     
                     modal.classList.add('active');
                     modal.style.display = 'flex';
@@ -1405,6 +1638,9 @@
                     modal.style.background = 'rgba(0, 0, 0, 0.96)';
                     document.body.style.overflow = 'hidden';
                     document.documentElement.style.overflow = 'hidden';
+                    document.body.classList.add('lightbox-open');
+
+                    console.log('✅ Modal should be visible now');
                     updateLightboxImage();
 
                     // تطبيق event listeners للإغلاق عند النقر على المناطق الفارغة
@@ -1450,10 +1686,7 @@
                             currentLightboxIndex = index;
                             currentLightboxZoom = 1;
                             updateLightboxImage();
-                        };
-                        
-                        if (index === currentLightboxIndex) {
-                            thumbnail.classList.add('active');
+                        scheduleThumbnailsAutoClose();
                         }
                         
                         container.appendChild(thumbnail);
@@ -1472,15 +1705,15 @@
                 }
 
                 function showPreviousLightbox() {
-                    if (!imageUrls.length) return;
-                    currentLightboxIndex = (currentLightboxIndex - 1 + imageUrls.length) % imageUrls.length;
+                    if (!window.imageUrls.length) return;
+                    currentLightboxIndex = (currentLightboxIndex - 1 + window.imageUrls.length) % window.imageUrls.length;
                     currentLightboxZoom = 1;
                     updateLightboxImage();
                 }
 
                 function showNextLightbox() {
-                    if (!imageUrls.length) return;
-                    currentLightboxIndex = (currentLightboxIndex + 1) % imageUrls.length;
+                    if (!window.imageUrls.length) return;
+                    currentLightboxIndex = (currentLightboxIndex + 1) % window.imageUrls.length;
                     currentLightboxZoom = 1;
                     updateLightboxImage();
                 }
@@ -1502,6 +1735,102 @@
                     updateLightboxImage();
                 }
 
+                function downloadCurrentImage() {
+                    const currentImageUrl = window.imageUrls[currentLightboxIndex];
+                    if (!currentImageUrl) {
+                        console.error('❌ No image URL available for download');
+                        return;
+                    }
+
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    if (downloadBtn) {
+                        downloadBtn.disabled = true;
+                        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    }
+
+                    const urlWithoutQuery = currentImageUrl.split('?')[0];
+                    const urlParts = urlWithoutQuery.split('/');
+                    let filename = urlParts[urlParts.length - 1] || ('hall-image-' + (currentLightboxIndex + 1) + '.jpg');
+                    if (!filename.includes('.')) {
+                        filename += '.jpg';
+                    }
+
+                    // Use XMLHttpRequest instead of fetch for better compatibility
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', currentImageUrl, true);
+                    xhr.responseType = 'blob';
+
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            const blob = xhr.response;
+                            const blobUrl = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.style.display = 'none';
+                            link.href = blobUrl;
+                            link.download = filename;
+                            link.target = '_blank';
+                            link.rel = 'noopener';
+                            document.body.appendChild(link);
+                            dispatchDownloadLink(link);
+
+                            setTimeout(() => {
+                                if (downloadBtn) {
+                                    downloadBtn.disabled = false;
+                                    downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                                    console.log('✅ Image downloaded: ' + filename);
+                                }
+                                document.body.removeChild(link);
+                                URL.revokeObjectURL(blobUrl);
+                            }, 1500);
+                        } else {
+                            console.error('❌ Download failed with status:', xhr.status);
+                            if (downloadBtn) {
+                                downloadBtn.disabled = false;
+                                downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                            }
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        console.error('❌ XHR Download failed, falling back to direct download');
+                        attemptSimpleDownload(currentImageUrl, filename, downloadBtn);
+                    };
+
+                    xhr.send();
+                }
+
+                function dispatchDownloadLink(link) {
+                    try {
+                        link.click();
+                    } catch (error) {
+                        if (typeof MouseEvent === 'function') {
+                            const event = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
+                            link.dispatchEvent(event);
+                        } else if (typeof link.click === 'function') {
+                            link.click();
+                        }
+                    }
+                }
+
+                function attemptSimpleDownload(url, filename, downloadBtn) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    dispatchDownloadLink(link);
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        if (downloadBtn) {
+                            downloadBtn.disabled = false;
+                            downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                            console.log('✅ Download attempt: ' + filename);
+                        }
+                    }, 1500);
+                }
+
                 function closeLightbox() {
                     const modal = document.getElementById('lightboxModal');
                     if (modal) {
@@ -1511,6 +1840,7 @@
                         modal.style.opacity = '';
                         document.body.style.overflow = 'auto';
                         document.documentElement.style.overflow = '';
+                        document.body.classList.remove('lightbox-open');
                     }
                     const thumbnailsPanel = document.getElementById('thumbnailsPanel');
                     if (thumbnailsPanel) {
@@ -1518,16 +1848,108 @@
                     }
                 }
 
-                window.openLightbox = openLightbox;
                 window.closeLightbox = closeLightbox;
+                window.toggleThumbnails = toggleThumbnails;
+                window.toggleThumbnailsBar = toggleThumbnailsBar;
+                window.showPreviousLightbox = showPreviousLightbox;
+                window.showNextLightbox = showNextLightbox;
+                window.zoomInLightbox = zoomInLightbox;
+                window.zoomOutLightbox = zoomOutLightbox;
+                window.resetLightboxZoom = resetLightboxZoom;
+                window.downloadCurrentImage = downloadCurrentImage;
+
+                // Add click listeners to gallery images
+                function setupLightboxListeners() {
+                    console.log('🔄 Setting up lightbox event listeners...');
+
+                    // Main image
+                    const mainImage = document.querySelector('.main-image img');
+                    console.log('Main image found:', mainImage);
+                    if (mainImage) {
+                        mainImage.addEventListener('click', function() {
+                            console.log('Main image clicked, src:', mainImage.getAttribute('data-src'));
+                            window.openLightbox(mainImage.getAttribute('data-src'));
+                        });
+                        console.log('✅ Main image listener added');
+                    }
+
+                    // Side images
+                    const sideImages = document.querySelectorAll('.image-side img');
+                    console.log('Side images found:', sideImages.length);
+                    sideImages.forEach(function(img, index) {
+                        img.addEventListener('click', function() {
+                            console.log('Side image clicked:', index, 'src:', img.getAttribute('data-src'));
+                            window.openLightbox(img.getAttribute('data-src'));
+                        });
+                    });
+                    console.log('✅ Side images listeners added');
+                }
+
+                // Setup listeners immediately and on DOMContentLoaded
+                setupLightboxListeners();
+                document.addEventListener('DOMContentLoaded', setupLightboxListeners);
+
+                // Also setup after a short delay in case images load later
+                setTimeout(setupLightboxListeners, 1000);
+
+                function toggleThumbnailsBar() {
+                    const group = document.getElementById('thumbnailsGroup');
+                    const btn = document.getElementById('thumbBarToggleBtn');
+                    if (group) {
+                        const hidden = group.classList.toggle('hidden-thumbnails');
+                        if (btn) {
+                            btn.innerHTML = hidden ? '<i class="fas fa-expand"></i>' : '<i class="fas fa-compress"></i>';
+                            btn.title = hidden ? 'عرض المعاينات' : 'إخفاء المعاينات';
+                        }
+                    }
+                }
+
+                let thumbnailsAutoCloseTimeout;
+
+                function scheduleThumbnailsAutoClose() {
+                    const panel = document.getElementById('thumbnailsPanel');
+                    if (!panel || panel.style.display !== 'block') {
+                        return;
+                    }
+                    clearTimeout(thumbnailsAutoCloseTimeout);
+                    thumbnailsAutoCloseTimeout = setTimeout(() => {
+                        panel.style.display = 'none';
+                    }, 2500);
+                }
 
                 function toggleThumbnails() {
                     const panel = document.getElementById('thumbnailsPanel');
-                    if (panel.style.display === 'none') {
-                        panel.style.display = 'block';
-                    } else {
+                    if (!panel) return;
+                    if (panel.style.display === 'block') {
                         panel.style.display = 'none';
+                        clearTimeout(thumbnailsAutoCloseTimeout);
+                    } else {
+                        panel.style.display = 'block';
+                        scheduleThumbnailsAutoClose();
                     }
+                }
+
+                // إغلاق المعاينات عند الضغط خارجها
+                document.addEventListener('click', function(e) {
+                    const panel = document.getElementById('thumbnailsPanel');
+                    const thumbnailsBtn = document.getElementById('thumbnailsBtn');
+                    if (!panel || panel.style.display !== 'block') {
+                        return;
+                    }
+                    if (!panel.contains(e.target) &&
+                        e.target !== thumbnailsBtn &&
+                        (!thumbnailsBtn || !thumbnailsBtn.contains(e.target))) {
+                        panel.style.display = 'none';
+                        clearTimeout(thumbnailsAutoCloseTimeout);
+                    }
+                });
+
+                const panel = document.getElementById('thumbnailsPanel');
+                if (panel) {
+                    panel.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        scheduleThumbnailsAutoClose();
+                    });
                 }
 
                 // Close lightbox on Escape key
@@ -1579,36 +2001,46 @@
                     lightboxImg.addEventListener('click', function(e) {
                         e.stopPropagation();
                     });
-
-                    // Add drag functionality
-                    lightboxImg.addEventListener('mousedown', function(e) {
-                        isDragging = true;
-                        startX = e.clientX;
-                        startY = e.clientY;
-                        lightboxImg.style.cursor = 'grabbing';
-                        e.preventDefault();
-                    });
-
-                    document.addEventListener('mousemove', function(e) {
-                        if (isDragging) {
-                            const dx = e.clientX - startX;
-                            const dy = e.clientY - startY;
-                            dragX += dx;
-                            dragY += dy;
-                            lightboxImg.style.transform = `translate(${dragX - 50}%, ${dragY - 50}%) scale(${currentLightboxZoom})`;
-                            startX = e.clientX;
-                            startY = e.clientY;
-                        }
-                    });
-
-                    document.addEventListener('mouseup', function() {
-                        if (isDragging) {
-                            isDragging = false;
-                            lightboxImg.style.cursor = 'grab';
-                        }
-                    });
                 }
 
+            </script>
+
+            <!-- Drag event listeners setup -->
+            <script>
+                // Setup drag functionality globally for lightbox image
+                let dragStartX, dragStartY;
+
+                document.addEventListener('mousedown', function(e) {
+                    const lightboxImg = document.getElementById('lightboxImage');
+                    const modal = document.getElementById('lightboxModal');
+
+                    if (lightboxImg && modal && modal.classList.contains('active') && e.target === lightboxImg) {
+                        isDragging = true;
+                        dragStartX = e.clientX - dragX;
+                        dragStartY = e.clientY - dragY;
+                        lightboxImg.style.cursor = 'grabbing';
+                        e.preventDefault();
+                    }
+                }, true);
+
+                document.addEventListener('mousemove', function(e) {
+                    const lightboxImg = document.getElementById('lightboxImage');
+                    
+                    if (isDragging && lightboxImg) {
+                        dragX = e.clientX - dragStartX;
+                        dragY = e.clientY - dragStartY;
+                        lightboxImg.style.transform = `translate(calc(-50% + ${dragX}px), calc(-50% + ${dragY}px)) scale(${currentLightboxZoom})`;
+                    }
+                }, true);
+
+                document.addEventListener('mouseup', function() {
+                    const lightboxImg = document.getElementById('lightboxImage');
+                    
+                    if (isDragging && lightboxImg) {
+                        isDragging = false;
+                        lightboxImg.style.cursor = 'grab';
+                    }
+                }, true);
             </script>
             <script>
                 console.log('hall-details booking script initialized');
@@ -1753,7 +2185,7 @@
 
                 window.userIsAuthenticated = @json(Auth::check());
                 const modal = document.getElementById('bookingModal');
-                const bookBtn = document.getElementById('bookNowButton') || document.querySelector('.book-now');
+                const bookNowPageBtn = document.getElementById('bookNowButton') || document.querySelector('.book-now');
                 const closeBtn = modal?.querySelector('.close-modal');
                 const bookingDateInput = document.getElementById('bookingDate');
                 const bookingDatePicker = document.getElementById('bookingDateInput');
@@ -1761,7 +2193,7 @@
                 const depositAmountEl = document.getElementById('depositAmount');
                 const remainingAmountEl = document.getElementById('remainingAmount');
                 const termsAgreement = document.getElementById('termsAgreement');
-                const confirmBtn = document.querySelector('.btn-confirm-final');
+                const bookModalBtn = document.querySelector('.btn-book');
                 const steps = document.querySelectorAll('.booking-step');
                 const stepIndicators = document.querySelectorAll('.booking-steps .step');
                 const nextBtns = document.querySelectorAll('.btn-next');
@@ -1786,9 +2218,8 @@
                         btn.style.display = currentStep < steps.length - 1 ? 'inline-flex' : 'none';
                     });
 
-                    if (confirmBtn) {
-                        confirmBtn.style.display = currentStep === steps.length - 1 ? 'inline-flex' : 'none';
-                        confirmBtn.disabled = currentStep === steps.length - 1 ? !termsAgreement?.checked : true;
+                    if (bookModalBtn) {
+                        bookModalBtn.style.display = currentStep === steps.length - 1 ? 'inline-flex' : 'none';
                     }
                 };
 
@@ -1838,8 +2269,8 @@
                     updateSteps();
                 };
 
-                if (confirmBtn) {
-                    confirmBtn.style.display = 'none';
+                if (bookModalBtn) {
+                    bookModalBtn.style.display = 'none';
                 }
 
                 const toLatinDigits = (str) => {
@@ -1957,28 +2388,198 @@
                     }
                 };
 
+                const bookingCalendar = document.getElementById('bookingCalendar');
+                let calendarMonthDate = new Date(getToday());
+
+                const formatMonthHeader = (date) => {
+                    return new Date(date).toLocaleDateString('ar-EG', {
+                        month: 'long',
+                        year: 'numeric',
+                    });
+                };
+
+                const renderCalendar = (selected = null) => {
+                    if (!bookingCalendar) return;
+
+                    const today = getToday();
+                    const activeDate = selected ? new Date(selected) : new Date(calendarMonthDate);
+                    calendarMonthDate = new Date(activeDate);
+                    calendarMonthDate.setDate(1);
+
+                    const monthName = formatMonthHeader(calendarMonthDate);
+                    const firstDayOfWeek = new Date(calendarMonthDate).getDay();
+                    const daysInMonth = new Date(calendarMonthDate.getFullYear(), calendarMonthDate.getMonth() + 1, 0).getDate();
+                    const selectedDateStr = normalizeDateString(selected || bookingDatePicker?.value || today);
+
+                    const weekDays = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
+                    const currentDate = new Date(today);
+                    const firstAllowedMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                    const canGoBack = new Date(calendarMonthDate.getFullYear(), calendarMonthDate.getMonth(), 1) > firstAllowedMonth;
+                    const header = `
+                        <div class="calendar-header">
+                            <div class="calendar-title">${monthName}</div>
+                            <div class="calendar-nav">
+                                <button type="button" data-calendar-action="prev" ${canGoBack ? '' : 'disabled'}>‹</button>
+                                <button type="button" data-calendar-action="next">›</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid">
+                            ${weekDays.map((day) => `<div class="calendar-weekday">${day}</div>`).join('')}
+                        </div>
+                    `;
+
+                    let dayCells = '';
+                    for (let i = 0; i < firstDayOfWeek; i += 1) {
+                        dayCells += '<div class="calendar-empty"></div>';
+                    }
+
+                    for (let day = 1; day <= daysInMonth; day += 1) {
+                        const dateValue = `${calendarMonthDate.getFullYear()}-${String(calendarMonthDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        const isUnavailableDate = isDateUnavailable(dateValue) || dateValue < today;
+                        const isSelected = selectedDateStr === dateValue;
+                        const classes = ['calendar-day'];
+                        if (isUnavailableDate) classes.push('disabled');
+                        if (isSelected) classes.push('selected');
+                        if (dateValue === today) classes.push('today');
+
+                        dayCells += `<button type="button" class="${classes.join(' ')}" data-calendar-date="${dateValue}" ${isUnavailableDate ? 'disabled' : ''}>${day}</button>`;
+                    }
+
+                    bookingCalendar.innerHTML = header + '<div class="calendar-grid">' + dayCells + '</div>';
+
+                    bookingCalendar.querySelectorAll('[data-calendar-action]').forEach((btn) => {
+                        btn.addEventListener('click', () => {
+                            const action = btn.getAttribute('data-calendar-action');
+                            if (action === 'prev') {
+                                const currentDate = new Date(today);
+                                const firstAllowedMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                                const monthToShow = new Date(calendarMonthDate.getFullYear(), calendarMonthDate.getMonth() - 1, 1);
+                                if (monthToShow < firstAllowedMonth) {
+                                    return;
+                                }
+                            }
+                            calendarMonthDate.setMonth(calendarMonthDate.getMonth() + (action === 'next' ? 1 : -1));
+                            renderCalendar();
+                        });
+                    });
+
+                    bookingCalendar.querySelectorAll('[data-calendar-date]').forEach((btn) => {
+                        btn.addEventListener('click', () => {
+                            const dateValue = btn.getAttribute('data-calendar-date');
+                            if (!dateValue || btn.disabled) return;
+                            bookingDatePicker.value = dateValue;
+                            onDatePicked(dateValue);
+                            renderCalendar(dateValue);
+                        });
+                    });
+                };
+
+                const getNextAvailableDate = (startDate) => {
+                    const today = getToday();
+                    let current = normalizeDateString(startDate) || today;
+                    if (current < today) {
+                        current = today;
+                    }
+
+                    const date = new Date(current);
+                    for (let i = 0; i < 365; i += 1) {
+                        const candidate = date.toISOString().slice(0, 10);
+                        if (!isDateUnavailable(candidate)) {
+                            return candidate;
+                        }
+                        date.setDate(date.getDate() + 1);
+                    }
+                    return null;
+                };
+
+                // Fetch booked dates from server when modal opens or page loads
+                const fetchBookedDates = async () => {
+                    try {
+                        const hallId = document.getElementById('hallId')?.value;
+                        if (!hallId) return;
+
+                        const response = await fetch(`/api/booked-dates?hall_id=${hallId}`);
+                        const data = await response.json();
+
+                        if (data.booked_dates && Array.isArray(data.booked_dates)) {
+                            const bookedDates = data.booked_dates.map(normalizeDateString);
+                            unavailableDates = Array.from(new Set([...unavailableDates, ...bookedDates])).sort();
+                            console.log('📅 Booked dates loaded:', unavailableDates);
+                        }
+                    } catch (error) {
+                        console.error('❌ Failed to fetch booked dates:', error);
+                    }
+                };
+
                 // When user picks a date via the date input
-                const onDatePicked = (dateStr) => {
-                    if (!dateStr) return;
+                const isDateUnavailable = (dateStr) => {
+                    if (!dateStr) return false;
+                    const normalizedDate = normalizeDateString(dateStr);
+                    return unavailableDates && unavailableDates.includes(normalizedDate);
+                };
+
+                const onDatePicked = (dateStr, showAlert = true) => {
+                    if (!dateStr) return false;
 
                     const normalizedDate = normalizeDateString(dateStr);
+                    const today = getToday();
+                    let selectedDate = normalizedDate;
 
-                    // منع اختيار تواريخ غير متاحة
-                    if (unavailableDates && unavailableDates.includes(normalizedDate)) {
-                        alert('هذا التاريخ غير متاح للحجز. الرجاء اختيار تاريخ آخر.');
-                        if (bookingDatePicker) bookingDatePicker.value = '';
-                        return;
+                    if (selectedDate < today || isDateUnavailable(selectedDate)) {
+                        const nextAvailable = getNextAvailableDate(selectedDate);
+                        if (!nextAvailable) {
+                            if (showAlert) {
+                                alert('لا يوجد تاريخ متاح للحجز في المستقبل القريب. الرجاء المحاولة لاحقاً.');
+                            }
+                            if (bookingDatePicker) bookingDatePicker.value = '';
+                            if (bookingDateInput) bookingDateInput.value = '';
+                            if (selectedDateText) selectedDateText.textContent = 'لم يتم الاختيار';
+                            const summaryDateEl = document.getElementById('summaryDate');
+                            if (summaryDateEl) {
+                                summaryDateEl.textContent = 'لم يتم الاختيار';
+                            }
+                            return false;
+                        }
+
+                        if (showAlert) {
+                            if (selectedDate < today) {
+                                alert('لا يمكن اختيار تاريخ سابق. تم اختيار أول تاريخ متاح بعد اليوم.');
+                            } else {
+                                alert('هذا التاريخ غير متاح للحجز. تم اختيار أول تاريخ متاح بعده.');
+                            }
+                        }
+
+                        selectedDate = nextAvailable;
+                        if (bookingDatePicker) bookingDatePicker.value = selectedDate;
                     }
-                    if (bookingDateInput) bookingDateInput.value = normalizedDate;
-                    if (selectedDateText) selectedDateText.textContent = formatDateReadable(normalizedDate);
+
+                    if (bookingDateInput) bookingDateInput.value = selectedDate;
+                    if (selectedDateText) selectedDateText.textContent = formatDateReadable(selectedDate);
+                    const summaryDateEl = document.getElementById('summaryDate');
+                    if (summaryDateEl) {
+                        summaryDateEl.textContent = formatDateReadable(selectedDate);
+                    }
+                    renderCalendar(selectedDate);
+                    return true;
                 };
 
                 if (bookingDatePicker) {
                     bookingDatePicker.min = getToday();
                     bookingDatePicker.value = getToday();
-                    onDatePicked(bookingDatePicker.value);
+                    fetchBookedDates().then(() => {
+                        const initialDate = getNextAvailableDate(getToday());
+                        if (initialDate) {
+                            bookingDatePicker.value = initialDate;
+                        }
+                        onDatePicked(bookingDatePicker.value, false);
+                        renderCalendar(bookingDatePicker.value);
+                    });
 
                     bookingDatePicker.addEventListener('change', (event) => {
+                        onDatePicked(event.target.value);
+                    });
+
+                    bookingDatePicker.addEventListener('input', (event) => {
                         onDatePicked(event.target.value);
                     });
                 }
@@ -2000,26 +2601,38 @@
                     document.documentElement.style.overflow = '';
                 };
 
-                const openModal = () => {
+                const openModal = async () => {
                     if (!window.userIsAuthenticated) {
                         window.location.href = "{{ route('login') }}";
                         return;
                     }
                     if (!modal) return;
-                    modal.classList.add('show');
-                    lockPageScroll();
-                    setDepositAmount();
 
-                    // تأكد أن تاريخ الحجز مضبوط أمامك (اليوم بشكل افتراضي)
+                    await fetchBookedDates();
+
                     if (bookingDatePicker && bookingDatePicker.value === '') {
                         bookingDatePicker.value = getToday();
                     }
+                    const selectedDateValue = bookingDatePicker?.value || getToday();
+                    if (!onDatePicked(selectedDateValue)) {
+                        return;
+                    }
+
+                    const finalSelectedDate = bookingDatePicker?.value || getToday();
+                    if (isDateUnavailable(finalSelectedDate)) {
+                        return;
+                    }
+
                     if (bookingDateInput && bookingDateInput.value === '') {
-                        bookingDateInput.value = bookingDatePicker ? bookingDatePicker.value : getToday();
+                        bookingDateInput.value = finalSelectedDate;
                     }
                     if (selectedDateText) {
                         selectedDateText.textContent = formatDateReadable(bookingDateInput.value);
                     }
+
+                    modal.classList.add('show');
+                    lockPageScroll();
+                    setDepositAmount();
 
                     if (typeof window.resetBookingSteps === 'function') {
                         window.resetBookingSteps();
@@ -2028,17 +2641,17 @@
 
                 window.openBookingModal = openModal;
                 window.openModal = openModal;
-                if (confirmBtn) {
-                    confirmBtn.disabled = !termsAgreement?.checked;
+                if (termsAgreement && bookModalBtn) {
+                    bookModalBtn.disabled = !termsAgreement?.checked;
                 }
 
-                if (termsAgreement && confirmBtn) {
+                if (termsAgreement && bookModalBtn) {
                     termsAgreement.addEventListener('change', () => {
-                        confirmBtn.disabled = !termsAgreement.checked;
+                        bookModalBtn.disabled = !termsAgreement.checked;
                     });
                 }
 
-                console.log('Booking modal ready', { modal, bookBtn });
+                console.log('Booking modal ready', { modal, bookNowPageBtn, bookModalBtn });
 
                 const closeModal = () => {
                     if (!modal) return;
@@ -2046,9 +2659,16 @@
                     unlockPageScroll();
                 };
 
-                if (bookBtn) {
-                    console.log('Booking button found', bookBtn);
-                    bookBtn.addEventListener('click', openModal);
+                if (bookNowPageBtn) {
+                    console.log('Booking button found', bookNowPageBtn);
+                    bookNowPageBtn.addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        const selectedValue = bookingDatePicker?.value || getToday();
+                        if (!onDatePicked(selectedValue)) {
+                            return;
+                        }
+                        await openModal();
+                    });
                 } else {
                     console.warn('Booking button not found');
                 }
@@ -2069,7 +2689,7 @@
                 if (bookingForm) {
                     bookingForm.noValidate = true;
 
-                    bookingForm.addEventListener('submit', (event) => {
+                    bookingForm.addEventListener('submit', async (event) => {
                         if (!termsAgreement || !termsAgreement.checked) {
                             event.preventDefault();
                             alert('يرجى الموافقة على الشروط والأحكام');
@@ -2098,6 +2718,23 @@
                             return;
                         }
 
+                        // Check availability before submitting
+                        try {
+                            const availabilityResponse = await fetch(`/api/check-availability?hall_id=${hallId}&booking_date=${bookingDate}`);
+                            const availabilityData = await availabilityResponse.json();
+
+                            if (!availabilityData.available) {
+                                event.preventDefault();
+                                alert('عذراً، القاعة محجوزة بالفعل في هذا التاريخ. يرجى اختيار تاريخ آخر.');
+                                return;
+                            }
+                        } catch (error) {
+                            console.error('خطأ في التحقق من التوفرية:', error);
+                            event.preventDefault();
+                            alert('حدث خطأ أثناء التحقق من توفرية القاعة. يرجى المحاولة لاحقاً.');
+                            return;
+                        }
+
                         // Validate only the visible step fields, because hidden step fields may still be present
                         const currentStepEl = steps[currentStep];
                         if (currentStepEl) {
@@ -2119,13 +2756,15 @@
                         // Allow the browser to submit the form normally after the final check
                     });
 
-                    if (confirmBtn) {
-                        confirmBtn.addEventListener('click', (event) => {
+if (bookModalBtn) {
+                    bookModalBtn.addEventListener('click', (event) => {
                             if (bookingForm) {
                                 bookingForm.requestSubmit();
                             }
                         });
                     }
+
+                    // Payment will be handled from the bookings page
                 }
             </script>
 
@@ -2683,6 +3322,100 @@
                     text-decoration: underline;
                 }
 
+                .payment-section {
+                    margin: 30px 0;
+                }
+
+                .payment-methods {
+                    margin-bottom: 20px;
+                }
+
+                .payment-method {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px 20px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 12px;
+                    background: #ffffff;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .payment-method.active {
+                    border-color: #d4af37;
+                    background: rgba(212, 175, 55, 0.05);
+                }
+
+                .payment-method i {
+                    font-size: 1.5rem;
+                    color: #d4af37;
+                }
+
+                .payment-method span {
+                    font-weight: 600;
+                    color: #152b4f;
+                }
+
+                .payment-method small {
+                    color: #64748b;
+                    font-size: 0.9rem;
+                }
+
+                .payment-actions {
+                    text-align: center;
+                    margin: 30px 0;
+                }
+
+                .btn-payment {
+                    background: linear-gradient(135deg, #d4af37 0%, #f59e0b 100%);
+                    color: white;
+                    border: none;
+                    padding: 16px 32px;
+                    border-radius: 50px;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+                }
+
+                .btn-payment:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+                }
+
+                .btn-payment:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                    transform: none;
+                }
+
+                .payment-status {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    padding: 20px;
+                    background: rgba(212, 175, 55, 0.1);
+                    border-radius: 12px;
+                    margin-top: 20px;
+                }
+
+                .loading-spinner {
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid #d4af37;
+                    border-top: 2px solid transparent;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+
                 /* Modal Footer Enhanced */
                 .modal-footer {
                     display: flex;
@@ -2746,6 +3479,21 @@
                 }
 
                 .btn-confirm-final:hover {
+                    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+                }
+
+                .btn-success {
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                    font-size: 16px;
+                    padding: 12px 28px;
+                    min-width: 150px;
+                }
+
+                .btn-success:hover {
                     background: linear-gradient(135deg, #059669 0%, #047857 100%);
                     transform: translateY(-2px);
                     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
@@ -2923,8 +3671,69 @@
                         padding: 14px 20px;
                     }
                 }
+
+                /* Lightbox responsive toolbar */
+                @media (max-width: 768px) {
+                    .lightbox-toolbar {
+                        gap: 12px;
+                        padding: 12px 16px;
+                        bottom: 10px;
+                    }
+
+                    .toolbar-btn {
+                        width: 36px;
+                        height: 36px;
+                        font-size: 14px;
+                    }
+
+                    .reset-btn {
+                        font-size: 0.8rem;
+                        padding: 0 10px;
+                    }
+
+                    .thumbnails-group {
+                        display: none;
+                    }
+
+                    .lightbox-nav {
+                        width: 48px;
+                        height: 48px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .lightbox-toolbar {
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        padding: 10px 12px;
+                        max-width: 90vw;
+                    }
+
+                    .toolbar-btn {
+                        width: 34px;
+                        height: 34px;
+                        font-size: 13px;
+                    }
+
+                    .toolbar-group {
+                        gap: 6px;
+                    }
+
+                    .lightbox-nav {
+                        width: 44px;
+                        height: 44px;
+                        font-size: 20px;
+                    }
+
+                    .lightbox-prev {
+                        left: 8px;
+                    }
+
+                    .lightbox-next {
+                        right: 8px;
+                    }
+                }
             </style>
-        @endpush
     </div>
 
     <!-- Lightbox Modal - محسّن -->
@@ -2963,7 +3772,7 @@
             </button>
 
             <!-- شريط التحكم في الأسفل -->
-            <div class="lightbox-toolbar">
+            <div class="lightbox-toolbar" id="lightboxToolbar">
                 <!-- مجموعة التكبير -->
                 <div class="toolbar-group">
                     <button class="toolbar-btn" onclick="zoomOutLightbox()" title="تصغير (-)" id="zoomOutBtn">
@@ -2978,14 +3787,17 @@
                 </div>
 
                 <!-- معاينات الصور -->
-                <div class="toolbar-group thumbnails-group">
+                <div class="toolbar-group thumbnails-group" id="thumbnailsGroup">
                     <div id="thumbnailsContainer" class="thumbnails-container"></div>
                 </div>
 
                 <!-- أزرار إضافية -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" onclick="toggleThumbnails()" title="عرض المعاينات">
-                        <i class="fas fa-images"></i>
+                    <button class="toolbar-btn" onclick="downloadCurrentImage()" title="تنزيل الصورة" id="downloadBtn">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="toolbar-btn" onclick="toggleThumbnails()" title="فتح المعاينات" id="thumbnailsBtn">
+                        <i class="fas fa-th"></i>
                     </button>
                 </div>
             </div>
@@ -3086,7 +3898,7 @@
             inset: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 10000;
+            z-index: 99999;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -3103,6 +3915,13 @@
             visibility: visible;
             opacity: 1;
             pointer-events: auto;
+        }
+
+        body.lightbox-open {
+            overflow: hidden !important;
+            position: fixed !important;
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .lightbox-backdrop {
@@ -3148,6 +3967,8 @@
             justify-content: space-between;
             align-items: center;
             z-index: 10001;
+            transition: opacity 0.3s ease;
+        }
         }
 
         .image-counter {
@@ -3191,7 +4012,7 @@
             width: 100%;
             max-width: 98vw;
             max-height: calc(100vh - 180px);
-            margin: 0 0 120px;
+            margin: 120px 0 120px;
             cursor: default;
             overflow: visible;
             min-height: 240px;
@@ -3215,10 +4036,15 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(1);
+            cursor: grab;
         }
 
         .lightbox-image:hover {
             cursor: grab;
+        }
+
+        .lightbox-image:active {
+            cursor: grabbing;
         }
 
         .lightbox-zoom-info {
@@ -3250,7 +4076,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, opacity 0.3s ease;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 10001;
@@ -3275,20 +4101,64 @@
         }
 
         .lightbox-toolbar {
-            position: absolute;
-            bottom: 16px;
+            position: fixed;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
             align-items: center;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 14px 24px;
-            border-radius: 48px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: rgba(20, 20, 30, 0.95);
+            padding: 16px 28px;
+            border-radius: 50px;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
             z-index: 10001;
+            transition: all 0.3s ease, opacity 0.3s ease;
+        }
+
+        .lightbox-toolbar.auto-hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .lightbox-toolbar:not(.auto-hide) {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-header.auto-hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .lightbox-header:not(.auto-hide) {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-nav.auto-hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .lightbox-nav:not(.auto-hide) {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-toolbar.compact {
+            width: auto;
+            min-width: 64px;
+            padding: 12px;
+            border-radius: 50%;
+            gap: 0;
+            justify-content: center;
+        }
+
+        .lightbox-toolbar.compact .toolbar-group:not(.compact-toggle-group) {
+            display: none !important;
         }
 
         .toolbar-group {
@@ -3318,8 +4188,8 @@
             box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
         }
 
-        .toolbar-btn:active {
-            transform: scale(0.95);
+        .thumbnails-group.hidden-thumbnails {
+            display: none !important;
         }
 
         .reset-btn {
@@ -3355,6 +4225,37 @@
             animation: slideUp 0.3s ease;
         }
 
+        .thumbnails-panel:active {
+            pointer-events: all;
+        }
+
+        .thumbnails-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin: -12px -12px 12px -12px;
+        }
+
+        .thumbnails-close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnails-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -3383,7 +4284,8 @@
             border-radius: 12px;
             cursor: pointer;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            object-fit: cover;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             flex-shrink: 0;
         }
@@ -3442,10 +4344,33 @@
             }
 
             .lightbox-image-wrapper {
-                margin-top: 50px;
-                margin-bottom: 120px;
+                margin-top: 80px;
+                margin-bottom: 100px;
             }
         }
+
+        .lightbox-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lightbox-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
     </style>
+
+    </script>
 
 @endsection

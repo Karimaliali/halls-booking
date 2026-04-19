@@ -21,6 +21,10 @@ class Hall extends Model
         'capacity',
         'category',
         'features',
+        'description',
+        'facilities',
+        'phone',
+        'whatsapp',
         'unavailable_dates',
         'status',
         'min_price',
@@ -41,6 +45,10 @@ class Hall extends Model
         $path = $this->main_image;
         if (!$path) {
             return 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80';
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
         }
 
         $path = ltrim($path, '/');

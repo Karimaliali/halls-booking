@@ -5,20 +5,25 @@ function renderHalls(response) {
 
     // Handle both array and {data: array} response formats
     let halls = Array.isArray(response) ? response : response?.data || [];
-    let total = response?.total || halls.length;
+    const total = response?.total || halls.length;
+    const displayCount = halls.length;
 
     // Update results count
     const resultsCount = document.querySelector(".results-count");
     if (resultsCount) {
         const h3 = resultsCount.querySelector("h3");
         const p = resultsCount.querySelector("p");
-        if (halls.length === 0) {
+        if (displayCount === 0) {
             if (h3) h3.textContent = "لا توجد نتائج";
             if (p) p.textContent = "لم يتم العثور على قاعات مطابقة لبحثك";
-        } else {
-            if (h3) h3.textContent = `${total} قاعة متاحة`;
+        } else if (total > displayCount) {
+            if (h3) h3.textContent = `${displayCount} من ${total} قاعة متاحة`;
             if (p)
                 p.textContent = `تم العثور على ${total} قاعة تطابق معايير بحثك`;
+        } else {
+            if (h3) h3.textContent = `${displayCount} قاعة متاحة`;
+            if (p)
+                p.textContent = `تم العثور على ${displayCount} قاعة تطابق معايير بحثك`;
         }
     }
 

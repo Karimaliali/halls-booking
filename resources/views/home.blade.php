@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'قاعة | منصة حجز القاعات الكبرى')
+@section('title', 'QAA\'A | منصة حجز القاعات الكبرى')
 @section('body-class', 'page-home')
 
 @section('content')

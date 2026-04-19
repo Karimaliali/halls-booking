@@ -339,37 +339,58 @@ class HallController extends Controller
     }
 
     /**
-     * Search halls with filters.
+     * Build the hall search query and attach relevance scoring.
      */
-    public function search(Request $request)
+    private function buildSearchQuery(Request $request)
     {
-        $query = Hall::query();
+        $query = Hall::query()->select('halls.*');
+        $bindings = [];
+        $relevanceParts = [];
 
         if ($location = $request->query('location')) {
-            // البحث المرن - يدعم البحث بالكلمات المفصولة أو المركبة
             $location = trim($location);
             $query->where(function($q) use ($location) {
-                // البحث في الموقع كاملاً
                 $q->where('location', 'like', '%' . $location . '%')
-                  // أو البحث في كل كلمة منفصلة
                   ->orWhere(function($subQ) use ($location) {
-                      $words = explode(' ', $location);
+                      $words = array_filter(preg_split('/\s+/', $location), fn($word) => trim($word) !== '' && trim($word) !== '-');
                       foreach ($words as $word) {
-                          $word = trim($word);
-                          if (!empty($word)) {
-                              $subQ->where('location', 'like', '%' . $word . '%');
-                          }
+                          $subQ->orWhere('location', 'like', '%' . trim($word) . '%');
                       }
                   });
             });
+
+            $relevanceParts[] = '(CASE WHEN location LIKE ? THEN 100 ELSE 0 END)';
+            $bindings[] = '%' . $location . '%';
+
+            $words = array_filter(preg_split('/\s+/', $location), fn($word) => trim($word) !== '' && trim($word) !== '-');
+            foreach ($words as $word) {
+                $word = trim($word);
+                if ($word !== '') {
+                    $relevanceParts[] = '(CASE WHEN location LIKE ? THEN 15 ELSE 0 END)';
+                    $bindings[] = '%' . $word . '%';
+                }
+            }
         }
 
         if ($category = $request->query('category')) {
             $query->where('category', $category);
+            $relevanceParts[] = '(CASE WHEN category = ? THEN 20 ELSE 0 END)';
+            $bindings[] = $category;
         }
 
-        if ($feature = $request->query('feature')) {
-            $query->whereJsonContains('features', $feature);
+        $feature = $request->query('feature') ?? $request->query('features');
+        if ($feature) {
+            if (is_array($feature)) {
+                foreach ($feature as $f) {
+                    $query->whereJsonContains('features', $f);
+                    $relevanceParts[] = '(CASE WHEN features LIKE ? THEN 10 ELSE 0 END)';
+                    $bindings[] = '%' . $f . '%';
+                }
+            } else {
+                $query->whereJsonContains('features', $feature);
+                $relevanceParts[] = '(CASE WHEN features LIKE ? THEN 10 ELSE 0 END)';
+                $bindings[] = '%' . $feature . '%';
+            }
         }
 
         if ($minPrice = $request->query('min_price')) {
@@ -379,6 +400,50 @@ class HallController extends Controller
         if ($maxPrice = $request->query('max_price')) {
             $query->where('price', '<=', floatval($maxPrice));
         }
+
+        if ($guests = $request->query('guests')) {
+            if (str_contains($guests, '-')) {
+                [$min, $max] = array_map('trim', explode('-', $guests, 2));
+                $min = intval(preg_replace('/[^0-9]/', '', $min));
+                $max = intval(preg_replace('/[^0-9]/', '', $max));
+                if ($min) {
+                    $query->where('capacity', '>=', $min);
+                }
+                if ($max) {
+                    $query->where('capacity', '<=', $max);
+                }
+            } elseif (str_contains($guests, 'أقل') || str_contains($guests, 'اقل')) {
+                $num = intval(preg_replace('/[^0-9]/', '', $guests));
+                if ($num) {
+                    $query->where('capacity', '<=', $num);
+                }
+            } elseif (str_contains($guests, 'أكثر') || str_contains($guests, 'اكثر')) {
+                $num = intval(preg_replace('/[^0-9]/', '', $guests));
+                if ($num) {
+                    $query->where('capacity', '>=', $num);
+                }
+            }
+        }
+
+        if (!empty($relevanceParts)) {
+            $query->selectRaw('halls.*, (' . implode(' + ', $relevanceParts) . ') as relevance', $bindings);
+
+            if (!$request->query('sort')) {
+                $query->orderByDesc('relevance');
+            }
+        } elseif (!$request->query('sort')) {
+            $query->latest();
+        }
+
+        return $query;
+    }
+
+    /**
+     * Search halls with filters.
+     */
+    public function search(Request $request)
+    {
+        $query = $this->buildSearchQuery($request);
 
         if ($sort = $request->query('sort')) {
             switch ($sort) {
@@ -397,31 +462,7 @@ class HallController extends Controller
             }
         }
 
-        if ($guests = $request->query('guests')) {
-            if (str_contains($guests, '-')) {
-                [$min, $max] = array_map('trim', explode('-', $guests, 2));
-                $min = intval(preg_replace('/[^0-9]/', '', $min));
-                $max = intval(preg_replace('/[^0-9]/', '', $max));
-                if ($min) {
-                    $query->where('capacity', '>=', $min);
-                }
-                if ($max) {
-                    $query->where('capacity', '<=', $max);
-                }
-            } elseif (str_contains($guests, 'أقل') || str_contains($guests, 'اقل')) {
-                $num = intval(preg_replace('/[^0-9]/', '', $guests));
-                if ($num) {
-                    $query->where('capacity', '<=', $num);
-                }
-            } elseif (str_contains($guests, 'أكثر') || str_contains($guests, 'اكثر')) {
-                $num = intval(preg_replace('/[^0-9]/', '', $guests));
-                if ($num) {
-                    $query->where('capacity', '>=', $num);
-                }
-            }
-        }
-
-        $halls = $query->latest()->paginate(12)->withQueryString();
+        $halls = $query->paginate(12)->withQueryString();
 
         return view('search', compact('halls'));
     }
@@ -431,74 +472,9 @@ class HallController extends Controller
      */
     public function searchApi(Request $request)
     {
-        $query = Hall::query();
+        $query = $this->buildSearchQuery($request);
 
-        if ($location = $request->query('location')) {
-            // البحث المرن - يدعم البحث بالكلمات المفصولة أو المركبة
-            $location = trim($location);
-            $query->where(function($q) use ($location) {
-                // البحث في الموقع كاملاً
-                $q->where('location', 'like', '%' . $location . '%')
-                  // أو البحث في كل كلمة منفصلة
-                  ->orWhere(function($subQ) use ($location) {
-                      $words = explode(' ', $location);
-                      foreach ($words as $word) {
-                          $word = trim($word);
-                          if (!empty($word)) {
-                              $subQ->where('location', 'like', '%' . $word . '%');
-                          }
-                      }
-                  });
-            });
-        }
-
-        if ($category = $request->query('category')) {
-            $query->where('category', $category);
-        }
-
-        if ($feature = $request->query('features')) {
-            if (is_array($feature)) {
-                foreach ($feature as $f) {
-                    $query->whereJsonContains('features', $f);
-                }
-            } else {
-                $query->whereJsonContains('features', $feature);
-            }
-        }
-
-        if ($minPrice = $request->query('min_price')) {
-            $query->where('price', '>=', floatval($minPrice));
-        }
-
-        if ($maxPrice = $request->query('max_price')) {
-            $query->where('price', '<=', floatval($maxPrice));
-        }
-
-        if ($guests = $request->query('guests')) {
-            if (str_contains($guests, '-')) {
-                [$min, $max] = array_map('trim', explode('-', $guests, 2));
-                $min = intval(preg_replace('/[^0-9]/', '', $min));
-                $max = intval(preg_replace('/[^0-9]/', '', $max));
-                if ($min) {
-                    $query->where('capacity', '>=', $min);
-                }
-                if ($max) {
-                    $query->where('capacity', '<=', $max);
-                }
-            } elseif (str_contains($guests, 'أقل') || str_contains($guests, 'اقل')) {
-                $num = intval(preg_replace('/[^0-9]/', '', $guests));
-                if ($num) {
-                    $query->where('capacity', '<=', $num);
-                }
-            } elseif (str_contains($guests, 'أكثر') || str_contains($guests, 'اكثر')) {
-                $num = intval(preg_replace('/[^0-9]/', '', $guests));
-                if ($num) {
-                    $query->where('capacity', '>=', $num);
-                }
-            }
-        }
-
-        $halls = $query->latest()->paginate(12)->withQueryString();
+        $halls = $query->paginate(12)->withQueryString();
 
         return response()->json($halls);
     }

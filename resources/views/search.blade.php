@@ -54,6 +54,7 @@
             display: flex;
             flex-direction: column;
             transition: none;
+            cursor: pointer;
         }
 
         .result-card:hover {

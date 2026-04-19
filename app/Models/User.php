@@ -64,4 +64,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class);
+    }
+
+    /**
+     * Get unread notifications
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
+    }
+
+    /**
+     * Get recent notifications (last 30 days)
+     */
+    public function recentNotifications()
+    {
+        return $this->notifications()->where('created_at', '>=', now()->subDays(30))->latest();
+    }
 }

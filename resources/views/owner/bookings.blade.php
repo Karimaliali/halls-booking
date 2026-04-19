@@ -28,8 +28,8 @@
                         <div style="padding: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); background: rgba(27, 54, 93, 0.3);">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
                                 <div style="flex: 1;">
-                                    <h3 style="margin: 0 0 8px; font-weight: 900; font-size: 1.15rem; color: #fff;">
-                                        <a href="{{ route('owner.halls.show', $booking->hall_id) }}" style="color: var(--primary); text-decoration: none;">
+                                    <h3 style="margin: 0 0 8px; font-weight: 900; font-size: 1.15rem;">
+                                        <a href="{{ route('halls.show', $booking->hall) }}" style="color: #d4af37; text-decoration: none;">
                                             {{ $booking->hall->name }}
                                         </a>
                                     </h3>
@@ -101,7 +101,7 @@
 
                         <!-- زر الإجراء -->
                         <div style="padding: 16px 20px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-                            <a href="{{ route('owner.halls.show', $booking->hall_id) }}" class="btn btn-primary" style="text-decoration: none; padding: 10px 16px; background: var(--primary); color: #fff; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                            <a href="{{ route('halls.show', $booking->hall) }}" class="btn btn-primary" style="text-decoration: none; padding: 10px 16px; background: var(--primary); color: #fff; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa fa-eye"></i> عرض تفاصيل القاعة
                             </a>
 

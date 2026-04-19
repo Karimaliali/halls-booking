@@ -93,7 +93,10 @@
             flex-wrap: wrap;
         }
 
-        .hall-badge {
+        .owner-halls-grid .hall-badge {
+            position: static;
+            width: auto;
+            height: auto;
             background: rgba(212, 175, 55, 0.15);
             border-radius: 999px;
             padding: 8px 12px;
@@ -103,6 +106,28 @@
             gap: 8px;
             align-items: center;
             font-weight: 600;
+            box-shadow: none;
+            top: auto;
+            left: auto;
+        }
+
+        .owner-halls-grid .hall-status {
+            position: static;
+            top: auto;
+            right: auto;
+            background: rgba(16, 185, 129, 0.16);
+            color: #10b981;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .owner-halls-grid .hall-status.inactive {
+            background: rgba(239, 68, 68, 0.16);
+            color: #ef4444;
         }
 
         .hall-badge i {
@@ -181,7 +206,7 @@
             <div class="owner-halls-grid">
                 @foreach($halls as $hall)
                     <div class="hall-card">
-                        <a href="{{ route('owner.halls.show', $hall) }}">
+                        <a href="{{ route('halls.show', $hall) }}">
                             <img src="{{ $hall->first_image_url }}" alt="{{ $hall->name }}" />
                         </a>
 
@@ -211,7 +236,7 @@
                             @endif
 
                             <div class="hall-actions">
-                                <a href="{{ route('owner.halls.show', $hall) }}" class="btn-action-primary">عرض التفاصيل</a>
+                                <a href="{{ route('halls.show', $hall) }}" class="btn-action-primary">عرض التفاصيل</a>
                                 <a href="{{ route('owner.halls.edit', $hall) }}" class="btn-action-secondary">تعديل</a>
                                 <form method="POST" action="{{ route('owner.halls.destroy', $hall) }}" onsubmit="return confirm('هل أنت متأكد من حذف هذه القاعة؟')" style="display:inline;">
                                     @csrf
