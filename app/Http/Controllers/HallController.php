@@ -256,7 +256,7 @@ class HallController extends Controller
                 }
             }
 
-            return redirect(route('owner.halls.show', $hall))->with('status', 'تم تحديث القاعة بنجاح');
+            return redirect(route('halls.show', $hall))->with('status', 'تم تحديث القاعة بنجاح');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return back()->with('error', 'القاعة غير موجودة');
         } catch (\Exception $e) {
@@ -289,26 +289,42 @@ class HallController extends Controller
             $hall = Hall::findOrFail($id);
 
             // التحقق من أن المستخدم الحالي هو مالك القاعة
-            if ($hall->user_id !== $request->user()->id) {
-                return response([
-                    'status' => 'error',
-                    'message' => 'غير مصرح: يمكنك فقط حذف قاعاتك الخاصة'
-                ], 403);
+            if ($hall->user_id !== ($request->user()?->id ?? null)) {
+                if ($request->wantsJson() || $request->is('api/*')) {
+                    return response([
+                        'status' => 'error',
+                        'message' => 'غير مصرح: يمكنك فقط حذف قاعاتك الخاصة'
+                    ], 403);
+                }
+
+                return back()->with('error', 'غير مصرح: يمكنك فقط حذف قاعاتك الخاصة');
             }
 
             $hall->delete();
 
-            return response([
-                'status' => 'success',
-                'message' => 'تم حذف القاعة بنجاح'
-            ], 200);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response([
+                    'status' => 'success',
+                    'message' => 'تم حذف القاعة بنجاح'
+                ], 200);
+            }
+
+            return redirect()->route('owner.halls')->with('status', 'تم حذف القاعة بنجاح');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response([
-                'status' => 'error',
-                'message' => 'القاعة غير موجودة'
-            ], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response([
+                    'status' => 'error',
+                    'message' => 'القاعة غير موجودة'
+                ], 404);
+            }
+
+            return back()->with('error', 'القاعة غير موجودة');
         } catch (\Exception $e) {
-            return response(['error' => $e->getMessage()], 500);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response(['error' => $e->getMessage()], 500);
+            }
+
+            return back()->with('error', 'حدث خطأ: ' . $e->getMessage());
         }
     }
 
@@ -500,5 +516,45 @@ class HallController extends Controller
         );
 
         return back()->with('status', 'تم إرسال التقييم بنجاح.');
+    }
+
+    /**
+     * Toggle favorite status for a hall.
+     */
+    public function toggleFavorite(Request $request, Hall $hall)
+    {
+        $user = $request->user();
+
+        // Check if already favorited
+        $isFavorited = $user->favoriteHalls()->where('hall_id', $hall->id)->exists();
+
+        if ($isFavorited) {
+            // Remove from favorites
+            $user->favoriteHalls()->detach($hall->id);
+            $favorited = false;
+        } else {
+            // Add to favorites
+            $user->favoriteHalls()->attach($hall->id);
+            $favorited = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'favorited' => $favorited,
+            'message' => $favorited ? 'تم إضافة القاعة للمفضلة' : 'تم إزالة القاعة من المفضلة'
+        ]);
+    }
+
+    /**
+     * Check if hall is favorited by current user.
+     */
+    public function isFavorited(Request $request, Hall $hall)
+    {
+        $user = $request->user();
+        $isFavorited = $user->favoriteHalls()->where('hall_id', $hall->id)->exists();
+
+        return response()->json([
+            'favorited' => $isFavorited
+        ]);
     }
 }

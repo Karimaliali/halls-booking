@@ -6,6 +6,7 @@ use App\Http\Controllers\HallController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebAuthController;
+use App\Notifications\DepositPaidNotification;
 use App\Models\Hall;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -115,6 +116,12 @@ Route::middleware('auth')->group(function () {
                 'payment_status' => 'completed',
                 'payment_date' => now(),
             ]);
+
+            $hallOwner = $booking->hall->user;
+            if ($hallOwner) {
+                $hallOwner->notify(new DepositPaidNotification($booking));
+            }
+
             return redirect('/customer/bookings')->with('success', 'Payment completed successfully (Test Mode)');
         } else {
             return redirect('/customer/bookings')->with('error', 'Payment failed (Test Mode)');
@@ -163,6 +170,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/customer/bookings/{booking}/cancel', [BookingController::class, 'cancelBooking'])
         ->name('customer.bookings.cancel')
+        ->middleware('role.web:customer');
+
+    Route::post('/customer/bookings/{booking}/refund', [BookingController::class, 'requestRefund'])
+        ->name('customer.bookings.refund')
         ->middleware('role.web:customer');
 
     // Owner withdrawal routes

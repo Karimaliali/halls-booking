@@ -256,7 +256,7 @@
                                         <button type="button" id="calendarPrevBtn" style="width: 36px; height: 36px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.66); cursor: pointer;">‹</button>
                                         <button type="button" id="calendarNextBtn" style="width: 36px; height: 36px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.88); cursor: pointer;">›</button>
                                     </div>
-                                </div>
+                                     </div>
                                 <div id="calendarDaysGrid" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;"></div>
                             </div>
                         </div>
@@ -464,7 +464,7 @@
                 const weekDays = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
                 const monthFormatter = new Intl.DateTimeFormat('ar-EG', { month: 'long', year: 'numeric' });
 
-                const renderCalendar = () => {
+                function renderCalendar() {
                     if (!calendarMonthLabel || !calendarDaysGrid) return;
 
                     calendarMonthLabel.textContent = monthFormatter.format(calendarMonthDate);

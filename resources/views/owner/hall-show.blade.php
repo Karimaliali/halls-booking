@@ -38,6 +38,38 @@
             box-shadow: 0 12px 28px rgba(212, 175, 55, 0.4) !important;
         }
 
+        .btn-primary-navy {
+            background: linear-gradient(135deg, #0f1f35 0%, #1b365d 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(27, 54, 93, 0.3);
+        }
+
+        .btn-primary-navy:hover {
+            background: linear-gradient(135deg, #152b4f 0%, #1b365d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 54, 93, 0.4);
+        }
+
+        .form-control[type="date"],
+        input[type="date"].form-control {
+            padding: 16px 18px !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(148, 163, 184, 0.3) !important;
+            background: #ffffff !important;
+            color: #0f172a !important;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: textfield !important;
+        }
+
+        .form-control[type="date"]:focus,
+        input[type="date"].form-control:focus {
+            border-color: rgba(59, 130, 246, 0.9) !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12) !important;
+            background: #ffffff !important;
+        }
+
         .gallery-grid img {
             cursor: pointer;
         }
@@ -421,7 +453,7 @@
 
                                 <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0;">
 
-                                <a href="{{ route('owner.halls.edit', $hall) }}" class="btn btn-primary btn-large" style="display: block; text-align: center; margin-bottom: 10px;">
+                                <a href="{{ route('owner.halls.edit', $hall) }}" class="btn btn-primary-navy btn-large" style="display: block; text-align: center; margin-bottom: 10px;">
                                     تعديل البيانات
                                 </a>
 
@@ -463,13 +495,28 @@
 
                                     <div class="form-group" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                                         <label style="flex: 1 1 100%; margin-bottom: 8px;">اختر تاريخاً لوضعه غير متاح</label>
-                                        <input type="date" id="unavailableDatePicker" class="form-control" style="flex: 1 1 auto; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff;" />
+                                        <input type="date" id="unavailableDatePicker" class="form-control" style="flex: 1 1 auto; padding: 16px 18px; border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.3); background: #ffffff; color: #0f172a;" />
                                         <button type="button" class="btn btn-secondary" id="addUnavailableDateBtn" style="flex: 0 0 auto;">إضافة</button>
                                     </div>
 
                                     <div id="unavailableDatesList" style="display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0;"></div>
 
-                                    <button type="submit" class="btn btn-primary btn-large" style="display: block; width: 100%; text-align: center;">حفظ التواريخ</button>
+                                    <div id="ownerUnavailableCalendarCardLight" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 24px; padding: 18px; margin-top: 18px; color: #0f172a;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px;">
+                                            <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">تقويم الإغلاق</div>
+                                            <div style="display: flex; gap: 10px;">
+                                                <button type="button" id="calendarPrevBtnLight" style="width: 36px; height: 36px; border-radius: 14px; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">‹</button>
+                                                <button type="button" id="calendarNextBtnLight" style="width: 36px; height: 36px; border-radius: 14px; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">›</button>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 10px;">
+                                            <div id="calendarMonthLabelLight" style="font-weight: 700; color: #0f172a; font-size: 0.95rem;"></div>
+                                            <div style="font-size: 0.85rem; color: #475569;">اضغط على اليوم لتغييره.</div>
+                                        </div>
+                                        <div id="calendarDaysGridLight" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; background: #ffffff; padding: 12px; border-radius: 18px; border: 1px solid #e2e8f0;"></div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary-navy btn-large" style="display: block; width: 100%; text-align: center; margin-top: 18px;">حفظ التواريخ</button>
                                 </form>
                             </div>
                         @endif
@@ -614,10 +661,15 @@
             }
         });  
 
-        // Handle unavailable dates
+        const todayDate = new Date();
+        const currentDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate());
+        let calendarMonthDateLight = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const weekDaysLight = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
+        const monthFormatterLight = new Intl.DateTimeFormat('ar-EG', { month: 'long', year: 'numeric' });
+
         document.getElementById('addUnavailableDateBtn')?.addEventListener('click', function() {
             const dateInput = document.getElementById('unavailableDatePicker');
-            if (dateInput.value) {
+            if (dateInput && dateInput.value) {
                 const existingDates = document.getElementById('unavailableDatesInput').value;
                 const newDates = existingDates ? existingDates + ',' + dateInput.value : dateInput.value;
                 document.getElementById('unavailableDatesInput').value = newDates;
@@ -627,19 +679,112 @@
         });
 
         function updateUnavailableDatesList() {
-            const dates = document.getElementById('unavailableDatesInput').value.split(',').filter(d => d);
+            const hiddenInput = document.getElementById('unavailableDatesInput');
+            if (!hiddenInput) return;
+            const dates = hiddenInput.value.split(',').filter(d => d);
             const listDiv = document.getElementById('unavailableDatesList');
-            listDiv.innerHTML = dates.map(date => `
-                <span style="background: rgba(239, 68, 68, 0.2); padding: 8px 12px; border-radius: 8px; color: #ef4444; cursor: pointer;" onclick="removeDate('${date}')">${date} <i class="fa fa-times"></i></span>
-            `).join('');
+            if (listDiv) {
+                listDiv.innerHTML = dates.map(date => `
+                    <span style="background: rgba(239, 68, 68, 0.2); padding: 8px 12px; border-radius: 8px; color: #ef4444; cursor: pointer;" onclick="removeDate('${date}')">${date} <i class="fa fa-times"></i></span>
+                `).join('');
+            }
+            renderUnavailableDatesCalendarLight(dates);
         }
 
         function removeDate(date) {
-            let dates = document.getElementById('unavailableDatesInput').value.split(',').filter(d => d);
+            const hiddenInput = document.getElementById('unavailableDatesInput');
+            if (!hiddenInput) return;
+            let dates = hiddenInput.value.split(',').filter(d => d);
             dates = dates.filter(d => d !== date);
-            document.getElementById('unavailableDatesInput').value = dates.join(',');
+            hiddenInput.value = dates.join(',');
             updateUnavailableDatesList();
         }
+
+        function renderUnavailableDatesCalendarLight(dates) {
+            const calendarMonthLabel = document.getElementById('calendarMonthLabelLight');
+            const calendarDaysGrid = document.getElementById('calendarDaysGridLight');
+            const calendarPrevBtn = document.getElementById('calendarPrevBtnLight');
+            const calendarNextBtn = document.getElementById('calendarNextBtnLight');
+            if (!calendarMonthLabel || !calendarDaysGrid) return;
+
+            const unavailableDates = dates.map(d => d.trim()).filter(Boolean);
+            calendarMonthLabel.textContent = monthFormatterLight.format(calendarMonthDateLight);
+            const firstDayOfWeek = new Date(calendarMonthDateLight.getFullYear(), calendarMonthDateLight.getMonth(), 1).getDay();
+            const daysInMonth = new Date(calendarMonthDateLight.getFullYear(), calendarMonthDateLight.getMonth() + 1, 0).getDate();
+            const firstAllowedMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const canGoBack = calendarMonthDateLight.getTime() > firstAllowedMonth.getTime();
+
+            if (calendarPrevBtn) {
+                calendarPrevBtn.disabled = !canGoBack;
+                calendarPrevBtn.style.opacity = canGoBack ? '1' : '0.45';
+                calendarPrevBtn.style.cursor = canGoBack ? 'pointer' : 'not-allowed';
+            }
+
+            calendarDaysGrid.innerHTML = '';
+
+            weekDaysLight.forEach((day) => {
+                const label = document.createElement('span');
+                label.textContent = day;
+                label.style.textAlign = 'center';
+                label.style.color = '#475569';
+                label.style.fontSize = '0.82rem';
+                label.style.fontWeight = '700';
+                calendarDaysGrid.appendChild(label);
+            });
+
+            for (let emptyIndex = 0; emptyIndex < firstDayOfWeek; emptyIndex += 1) {
+                const emptyCell = document.createElement('div');
+                emptyCell.style.minHeight = '44px';
+                calendarDaysGrid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const dateValue = `${calendarMonthDateLight.getFullYear()}-${String(calendarMonthDateLight.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const cellDate = new Date(calendarMonthDateLight.getFullYear(), calendarMonthDateLight.getMonth(), day);
+                const isPastDate = cellDate < currentDate;
+                const isUnavailable = unavailableDates.includes(dateValue);
+                const dayBtn = document.createElement('button');
+                dayBtn.type = 'button';
+                dayBtn.textContent = day;
+                dayBtn.dataset.date = dateValue;
+                dayBtn.style.display = 'inline-flex';
+                dayBtn.style.justifyContent = 'center';
+                dayBtn.style.alignItems = 'center';
+                dayBtn.style.minHeight = '44px';
+                dayBtn.style.borderRadius = '14px';
+                dayBtn.style.border = '1px solid transparent';
+                dayBtn.style.padding = '0';
+                dayBtn.style.background = isPastDate ? '#f1f5f9' : isUnavailable ? '#f59e0b' : '#ffffff';
+                dayBtn.style.color = isPastDate ? '#94a3b8' : isUnavailable ? '#111827' : '#0f172a';
+                dayBtn.style.fontWeight = isUnavailable ? '700' : '500';
+                dayBtn.style.boxShadow = isUnavailable ? '0 0 0 1px rgba(245, 158, 11, 0.2)' : 'inset 0 0 0 1px rgba(148, 163, 184, 0.1)';
+                dayBtn.style.cursor = isPastDate ? 'not-allowed' : 'pointer';
+                dayBtn.disabled = isPastDate;
+                dayBtn.addEventListener('click', function () {
+                    if (isPastDate) return;
+                    const hiddenInput = document.getElementById('unavailableDatesInput');
+                    if (!hiddenInput) return;
+                    const currentDates = hiddenInput.value.split(',').filter(d => d);
+                    if (currentDates.includes(dateValue)) {
+                        hiddenInput.value = currentDates.filter(d => d !== dateValue).join(',');
+                    } else {
+                        hiddenInput.value = [...new Set([...currentDates, dateValue])].join(',');
+                    }
+                    updateUnavailableDatesList();
+                });
+                calendarDaysGrid.appendChild(dayBtn);
+            }
+        }
+
+        document.getElementById('calendarPrevBtnLight')?.addEventListener('click', function() {
+            calendarMonthDateLight.setMonth(calendarMonthDateLight.getMonth() - 1);
+            updateUnavailableDatesList();
+        });
+
+        document.getElementById('calendarNextBtnLight')?.addEventListener('click', function() {
+            calendarMonthDateLight.setMonth(calendarMonthDateLight.getMonth() + 1);
+            updateUnavailableDatesList();
+        });
 
         // Initialize
         updateUnavailableDatesList();

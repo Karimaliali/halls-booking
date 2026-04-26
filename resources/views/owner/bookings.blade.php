@@ -67,11 +67,34 @@
                                         </div>
                                     </div>
                                     <div style="flex: 1;">
-                                        <p style="margin: 0 0 4px; font-weight: 700; color: #fff;">{{ $booking->user->name }}</p>
+                                        <p style="margin: 0 0 4px; font-weight: 700; color: #fff;">{{ $booking->user_name ?? $booking->user->name }}</p>
                                         <p style="margin: 0; color: rgba(255,255,255,0.65); font-size: 0.85rem;">{{ $booking->user->email }}</p>
                                     </div>
                                 </div>
                             </div>
+
+                            @if($booking->payment_status === 'completed')
+                                <div style="margin-bottom: 18px; padding: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px;">
+                                    <strong style="color: rgba(255,255,255,0.6); display: block; margin-bottom: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">بيانات العميل بعد الدفع</strong>
+                                    <div style="display: grid; gap: 10px;">
+                                        <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 0.95rem;"><strong>الهاتف:</strong> {{ optional($booking->user)->phone ?? 'غير متوفر' }}</p>
+                                        <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 0.95rem;"><strong>الرقم القومي:</strong> {{ $booking->user_id_number ?? 'غير متوفر' }}</p>
+
+                                        @if($booking->id_card_image)
+                                            <div>
+                                                <p style="margin: 0 0 6px; color: rgba(255,255,255,0.7); font-size: 0.85rem;">صورة البطاقة الشخصية</p>
+                                                <img src="{{ route('storage.file', $booking->id_card_image) }}" alt="ID Card Image" style="max-width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);"/>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @else
+                                <div style="margin-bottom: 18px; padding: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px;">
+                                    <p style="margin: 0; color: rgba(255,255,255,0.75); font-size: 0.95rem;">
+                                        سيتم عرض بيانات العميل الشخصية كاملة بعد اكتمال دفع العربون.
+                                    </p>
+                                </div>
+                            @endif
 
                             <!-- تفاصيل الحجز -->
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">

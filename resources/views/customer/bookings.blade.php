@@ -59,6 +59,14 @@
                                         </button>
                                     </form>
                                 @endif
+                                @if($booking->status === 'cancelled' && $booking->payment_status === 'refunded')
+                                    <form method="POST" action="{{ route('customer.bookings.refund', $booking) }}" style="margin: 0;">
+                                        @csrf
+                                        <button type="submit" class="refund-btn" style="padding: 10px 16px; border-radius: 999px; border: none; background: rgba(34,197,94,0.9); color: #fff; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                            <i class="fa fa-undo"></i> استرداد العربون
+                                        </button>
+                                    </form>
+                                @endif
                                 <a href="{{ route('halls.show', $booking->hall) }}" style="padding: 10px 16px; border-radius: 999px; background: rgba(100,116,139,0.9); color: #fff; font-weight: 700; text-decoration: none;">
                                     عرض القاعة
                                 </a>
@@ -76,8 +84,8 @@
     </div>
 
     <!-- Payment Modal -->
-    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
-        <div style="background: #fff; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+    <div id="paymentModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: flex-start; justify-content: center; display: none; padding-top: 100px;">
+        <div style="background: #fff; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideDownModal 0.4s ease-out;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0; color: #1f2937;">بيانات الدفع</h3>
                 <button type="button" onclick="closePaymentModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>
@@ -126,10 +134,30 @@
         </div>
     </div>
 
+    <style>
+        @keyframes slideDownModal {
+            from {
+                opacity: 0;
+                transform: translateY(-500px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        #paymentModal {
+            display: none;
+        }
+        #paymentModal.show {
+            display: flex !important;
+        }
+    </style>
+
     <script>
         let currentPaymentBookingId = null;
 
         function openPaymentModal(bookingId, hallName, bookingDate, price) {
+            console.log('Opening payment modal...');
             currentPaymentBookingId = bookingId;
             const priceNum = parseInt(price.toString().replace(/\D/g, '')) || 0;
             const deposit = Math.ceil(priceNum * 0.25);
@@ -139,11 +167,14 @@
             document.getElementById('paymentPrice').textContent = `${priceNum} ج.م`;
             document.getElementById('paymentDeposit').textContent = `${deposit} ج.م`;
 
-            document.getElementById('paymentModal').style.display = 'flex';
+            const modal = document.getElementById('paymentModal');
+            console.log('Modal:', modal, 'Adding show class');
+            modal.classList.add('show');
+            console.log('Modal display is now:', window.getComputedStyle(modal).display);
         }
 
         function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('paymentModal').classList.remove('show');
             currentPaymentBookingId = null;
         }
 
@@ -162,7 +193,7 @@
                 info.style.display = 'none';
                 spinner.style.display = 'block';
 
-                const response = await fetch('/api/payments/initiate', {
+                const response = await fetch('{{ url('/payments/initiate') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -198,21 +229,27 @@
         }
 
         // Add event listeners to pay now buttons
-        document.querySelectorAll('.pay-now-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                openPaymentModal(
-                    this.dataset.bookingId,
-                    this.dataset.hallName,
-                    this.dataset.bookingDate,
-                    this.dataset.price
-                );
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.pay-now-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('Pay now button clicked', this.dataset);
+                    openPaymentModal(
+                        this.dataset.bookingId,
+                        this.dataset.hallName,
+                        this.dataset.bookingDate,
+                        this.dataset.price
+                    );
+                });
             });
-        });
 
-        // Close modal when clicking outside
-        document.getElementById('paymentModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePaymentModal();
+            // Close modal when clicking outside
+            const modal = document.getElementById('paymentModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closePaymentModal();
+                    }
+                });
             }
         });
 

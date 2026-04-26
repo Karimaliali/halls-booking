@@ -561,9 +561,9 @@ body.page-home .navbar[data-scrolled="true"] {
     text-align: center;
     color: var(--white);
     background:
-        linear-gradient(135deg, rgba(8, 16, 37, 0.45), rgba(8, 16, 37, 0.52)),
-        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80")
-            center/cover no-repeat;
+        linear-gradient(135deg, rgba(27, 54, 93, 0.4), rgba(27, 54, 93, 0.2)),
+        url("hero-bg.svg") center/cover no-repeat;
+    background-blend-mode: overlay;
     background-attachment: fixed;
     overflow: hidden;
     padding: 80px 20px 40px;
@@ -578,15 +578,15 @@ body.page-home .navbar[data-scrolled="true"] {
     background:
         radial-gradient(
             circle at top right,
-            rgba(212, 175, 55, 0.04),
-            transparent 40%
+            rgba(212, 175, 55, 0.12),
+            transparent 32%
         ),
         radial-gradient(
             circle at bottom left,
-            rgba(27, 54, 93, 0.08),
-            transparent 50%
+            rgba(27, 54, 93, 0.06),
+            transparent 45%
         ),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.45));
+        linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.18));
     pointer-events: none;
 }
 
@@ -602,52 +602,89 @@ body.page-home .navbar[data-scrolled="true"] {
 
 .particle {
     position: absolute;
-    width: 4px;
-    height: 4px;
-    background: rgba(212, 175, 55, 0.4);
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(
+        circle,
+        rgba(212, 175, 55, 0.95) 0%,
+        rgba(212, 175, 55, 0.15) 65%
+    );
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
     border-radius: 50%;
     opacity: 0;
-    animation: floatParticle 15s infinite ease-in-out;
+    animation: floatParticle 18s infinite ease-in-out;
 }
 
 .particle:nth-child(1) {
-    width: 6px;
-    height: 6px;
-    top: 20%;
-    right: 10%;
+    width: 10px;
+    height: 10px;
+    top: 12%;
+    right: 12%;
     animation-delay: 0s;
 }
 
 .particle:nth-child(2) {
-    width: 4px;
-    height: 4px;
-    top: 60%;
-    right: 80%;
+    width: 6px;
+    height: 6px;
+    top: 55%;
+    right: 78%;
     animation-delay: 2s;
 }
 
 .particle:nth-child(3) {
-    width: 8px;
-    height: 8px;
-    top: 40%;
+    width: 14px;
+    height: 14px;
+    top: 38%;
     right: 60%;
     animation-delay: 4s;
 }
 
 .particle:nth-child(4) {
-    width: 5px;
-    height: 5px;
-    top: 80%;
-    right: 25%;
+    width: 8px;
+    height: 8px;
+    top: 79%;
+    right: 24%;
     animation-delay: 6s;
 }
 
 .particle:nth-child(5) {
+    width: 12px;
+    height: 12px;
+    top: 18%;
+    right: 48%;
+    animation-delay: 8s;
+}
+
+.particle:nth-child(6) {
+    width: 9px;
+    height: 9px;
+    top: 68%;
+    right: 40%;
+    animation-delay: 3s;
+}
+
+.particle:nth-child(7) {
     width: 7px;
     height: 7px;
-    top: 15%;
-    right: 50%;
-    animation-delay: 8s;
+    top: 25%;
+    right: 30%;
+    animation-delay: 5s;
+}
+
+.particle:nth-child(8) {
+    width: 13px;
+    height: 13px;
+    top: 52%;
+    right: 15%;
+    animation-delay: 7s;
+}
+
+.particle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    filter: blur(1px);
 }
 
 .hero-content {

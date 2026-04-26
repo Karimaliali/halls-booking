@@ -38,6 +38,7 @@ class Hall extends Model
 
     protected $appends = [
         'main_image_url',
+        'favorites_count',
     ];
 
     public function getMainImageUrlAttribute()
@@ -57,6 +58,11 @@ class Hall extends Model
         }
 
         return '/storage-file/' . $path;
+    }
+
+    public function getFavoritesCountAttribute()
+    {
+        return $this->favoritedByUsers()->count();
     }
 
     public function getFirstImageUrlAttribute()
@@ -93,5 +99,10 @@ class Hall extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_favorites')->withTimestamps();
     }
 }

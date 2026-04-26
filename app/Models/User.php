@@ -22,6 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'role',
     ];
@@ -58,6 +59,11 @@ class User extends Authenticatable
     }
     public function halls(){
         return $this->hasMany(Hall::class);
+    }
+
+    public function favoriteHalls()
+    {
+        return $this->belongsToMany(Hall::class, 'user_favorites')->withTimestamps();
     }
 
     public function reviews()

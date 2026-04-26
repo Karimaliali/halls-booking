@@ -79,6 +79,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label><i class="fa-solid fa-phone"></i> رقم الهاتف</label>
+                    <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="أدخل رقم هاتفك" required />
+                </div>
+
+                <div class="form-group">
                     <label><i class="fa-regular fa-user"></i> الدور</label>
                     <select name="role" required>
                         <option value="" disabled {{ empty($role) ? 'selected' : '' }}>اختر الدور</option>

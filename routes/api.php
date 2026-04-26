@@ -8,8 +8,6 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/status', [StatusController::class, 'check']);
-Route::post('/register', [AuthController::class, 'register']);
 Route::get('/halls', [HallController::class, 'index']);
 Route::get('/halls/search', [HallController::class, 'searchApi']);
 Route::get('/check-availability',[BookingController::class, 'check']);
@@ -39,6 +37,12 @@ Route::middleware('auth:sanctum')->group(function (){
     });
     Route::middleware('role:customer')->get('/my-bookings', [BookingController::class, 'customerBookings']);
       Route::middleware('role:owner')->get('/owner/bookings', [BookingController::class, 'ownerBookings']);
+
+    // Favorite halls
+    Route::middleware('auth:sanctum')->group(function() {
+        Route::post('/halls/{hall}/favorite', [HallController::class, 'toggleFavorite']);
+        Route::get('/halls/{hall}/favorite', [HallController::class, 'isFavorited']);
+    });
 
     // Notifications routes
     Route::middleware('auth:sanctum')->group(function () {

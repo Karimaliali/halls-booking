@@ -161,6 +161,16 @@
             background: #c2185b;
         }
 
+        .favorites-count {
+            margin-left: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .action-btn.active .favorites-count {
+            color: #fff;
+        }
+
         .booking-sidebar {
             position: sticky;
             top: 120px;
@@ -876,6 +886,7 @@
                     <div class="quick-actions">
                         <button class="action-btn" id="favoriteBtn" title="أضف للمفضلة">
                             <i class="fa fa-heart"></i> أضف للمفضلة
+                            <span class="favorites-count">({{ $hall->favorites_count }})</span>
                         </button>
                         <button class="action-btn" onclick="shareHall()" title="مشاركة">
                             <i class="fa fa-share-alt"></i> مشاركة
@@ -1010,7 +1021,7 @@
                                     </button>
                                 @endif
                             @else
-                                <a href="{{ route('login') }}" class="btn btn-primary btn-large">
+                                <a href="{{ route('login') }}" class="btn btn-primary-navy btn-large">
                                     سجل دخول ثم احجز
                                 </a>
                             @endauth
@@ -1026,7 +1037,7 @@
                             <p style="margin: 16px 0 24px; color: #475569;">
                                 يمكنك تعديل معلومات القاعة وإدارة التوافر والحجوزات.
                             </p>
-                            <a href="{{ route('owner.halls.edit', $hall) }}" class="btn btn-primary btn-large">
+                            <a href="{{ route('owner.halls.edit', $hall) }}" class="btn btn-primary-navy btn-large">
                                 تعديل القاعة
                             </a>
                         </div>
@@ -1066,17 +1077,32 @@
                                         value="{{ implode(',', $unavailableDates) }}"
                                     />
 
-                                    <div class="form-group date-picker-row">
+                                    <!-- <div class="form-group date-picker-row">
                                         <label>اختر تاريخاً غير متاح</label>
                                         <div class="date-picker-wrap">
                                             <input type="date" id="unavailableDatePicker" class="form-control" />
                                             <button type="button" class="btn btn-secondary" id="addUnavailableDateBtn">إضافة</button>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div id="unavailableDatesList" class="tags-list"></div>
 
-                                    <button type="submit" class="btn btn-primary btn-large">حفظ التواريخ</button>
+                                    <div id="ownerUnavailableCalendarCardLight" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 24px; padding: 18px; margin-top: 18px; color: #0f172a;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px;">
+                                            <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">تقويم الإغلاق</div>
+                                            <div style="display: flex; gap: 10px;">
+                                                <button type="button" id="calendarPrevBtnLight" style="width: 36px; height: 36px; border-radius: 14px; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">‹</button>
+                                                <button type="button" id="calendarNextBtnLight" style="width: 36px; height: 36px; border-radius: 14px; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;">›</button>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 10px;">
+                                            <div id="calendarMonthLabelLight" style="font-weight: 700; color: #0f172a; font-size: 0.95rem;"></div>
+                                            <div style="font-size: 0.85rem; color: #475569;">اضغط على اليوم لتغييره.</div>
+                                        </div>
+                                        <div id="calendarDaysGridLight" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; background: #ffffff; padding: 12px; border-radius: 18px; border: 1px solid #e2e8f0;"></div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary-navy btn-large">حفظ التواريخ</button>
                                 </form>
                             </div>
                         @endif
@@ -1735,6 +1761,14 @@
                     updateLightboxImage();
                 }
 
+                function getLightboxIcon(iconName) {
+                    const icons = {
+                        spinner: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 50 50" aria-hidden="true" focusable="false"><circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="90 150" transform="rotate(-90 25 25)"/></svg>',
+                        download: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 19h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+                    };
+                    return icons[iconName] || '';
+                }
+
                 function downloadCurrentImage() {
                     const currentImageUrl = window.imageUrls[currentLightboxIndex];
                     if (!currentImageUrl) {
@@ -1745,7 +1779,7 @@
                     const downloadBtn = document.getElementById('downloadBtn');
                     if (downloadBtn) {
                         downloadBtn.disabled = true;
-                        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        downloadBtn.innerHTML = getLightboxIcon('spinner');
                     }
 
                     const urlWithoutQuery = currentImageUrl.split('?')[0];
@@ -1776,7 +1810,7 @@
                             setTimeout(() => {
                                 if (downloadBtn) {
                                     downloadBtn.disabled = false;
-                                    downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                                    downloadBtn.innerHTML = getLightboxIcon('download');
                                     console.log('✅ Image downloaded: ' + filename);
                                 }
                                 document.body.removeChild(link);
@@ -1786,7 +1820,7 @@
                             console.error('❌ Download failed with status:', xhr.status);
                             if (downloadBtn) {
                                 downloadBtn.disabled = false;
-                                downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                                downloadBtn.innerHTML = getLightboxIcon('download');
                             }
                         }
                     };
@@ -1825,7 +1859,7 @@
                         document.body.removeChild(link);
                         if (downloadBtn) {
                             downloadBtn.disabled = false;
-                            downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                            downloadBtn.innerHTML = getLightboxIcon('download');
                             console.log('✅ Download attempt: ' + filename);
                         }
                     }, 1500);
@@ -2117,33 +2151,56 @@
                 const favoriteBtn = document.getElementById('favoriteBtn');
                 if (favoriteBtn) {
                     const hallId = {{ $hall->id }};
-                    const isFavorited = localStorage.getItem(`favorite_${hallId}`) === 'true';
                     
-                    // تحديث حالة الزر عند التحميل
-                    if (isFavorited) {
-                        favoriteBtn.classList.add('active');
-                        favoriteBtn.style.color = '#e91e63';
+                    // تحقق من حالة المفضلة من الخادم
+                    async function checkFavoriteStatus() {
+                        try {
+                            const response = await fetch(`/api/halls/${hallId}/favorite`);
+                            const data = await response.json();
+                            if (data.favorited) {
+                                favoriteBtn.classList.add('active');
+                                favoriteBtn.style.color = '#e91e63';
+                            } else {
+                                favoriteBtn.classList.remove('active');
+                                favoriteBtn.style.color = 'inherit';
+                            }
+                        } catch (error) {
+                            console.error('Error checking favorite status:', error);
+                        }
                     }
                     
-                    favoriteBtn.addEventListener('click', function() {
+                    // تحقق عند التحميل
+                    checkFavoriteStatus();
+                    
+                    favoriteBtn.addEventListener('click', async function() {
                         if (!@json(Auth::check())) {
                             window.location.href = "{{ route('login') }}";
                             return;
                         }
                         
-                        const isActive = this.classList.toggle('active');
-                        localStorage.setItem(`favorite_${hallId}`, isActive);
-                        this.style.color = isActive ? '#e91e63' : 'inherit';
+                        const isActive = !this.classList.contains('active');
                         
-                        // يمكن إرسال الطلب إلى الخادم هنا
-                        fetch(`/api/halls/${hallId}/favorite`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ favorited: isActive })
-                        }).catch(err => console.log('ملاحظة: قد لا تكون API متاحة'));
+                        try {
+                            const response = await fetch(`/api/halls/${hallId}/favorite`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ favorited: isActive })
+                            });
+                            
+                            const data = await response.json();
+                            if (data.favorited) {
+                                this.classList.add('active');
+                                this.style.color = '#e91e63';
+                            } else {
+                                this.classList.remove('active');
+                                this.style.color = 'inherit';
+                            }
+                        } catch (error) {
+                            console.error('Error toggling favorite:', error);
+                        }
                     });
                 }
 
@@ -2305,11 +2362,90 @@
                     unavailableDates = unavailableDates ? [unavailableDates] : [];
                 }
                 unavailableDates = unavailableDates.map(normalizeDateString).filter(Boolean);
+                console.log('📅 Initial unavailable dates:', unavailableDates);
 
                 const unavailableDatesInput = document.getElementById('unavailableDatesInput');
                 const unavailableDatesPicker = document.getElementById('unavailableDatePicker');
                 const addUnavailableDateBtn = document.getElementById('addUnavailableDateBtn');
                 const unavailableDatesList = document.getElementById('unavailableDatesList');
+                const calendarMonthLabelLight = document.getElementById('calendarMonthLabelLight');
+                const calendarDaysGridLight = document.getElementById('calendarDaysGridLight');
+                const calendarPrevBtnLight = document.getElementById('calendarPrevBtnLight');
+                const calendarNextBtnLight = document.getElementById('calendarNextBtnLight');
+                const calendarToday = new Date();
+                const calendarMonthDateLight = new Date(calendarToday.getFullYear(), calendarToday.getMonth(), 1);
+                const weekDaysLight = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
+                const monthFormatterLight = new Intl.DateTimeFormat('ar-EG', { month: 'long', year: 'numeric' });
+
+                const renderUnavailableDatesCalendarLight = () => {
+                    if (!calendarMonthLabelLight || !calendarDaysGridLight) return;
+                    calendarMonthLabelLight.textContent = monthFormatterLight.format(calendarMonthDateLight);
+                    const firstDayOfWeek = new Date(calendarMonthDateLight.getFullYear(), calendarMonthDateLight.getMonth(), 1).getDay();
+                    const daysInMonth = new Date(calendarMonthDateLight.getFullYear(), calendarMonthDateLight.getMonth() + 1, 0).getDate();
+                    const firstAllowedMonth = new Date(calendarToday.getFullYear(), calendarToday.getMonth(), 1);
+                    const canGoBack = calendarMonthDateLight.getTime() > firstAllowedMonth.getTime();
+
+                    if (calendarPrevBtnLight) {
+                        calendarPrevBtnLight.disabled = !canGoBack;
+                        calendarPrevBtnLight.style.opacity = canGoBack ? '1' : '0.45';
+                        calendarPrevBtnLight.style.cursor = canGoBack ? 'pointer' : 'not-allowed';
+                    }
+
+                    calendarDaysGridLight.innerHTML = '';
+                    weekDaysLight.forEach((day) => {
+                        const label = document.createElement('span');
+                        label.textContent = day;
+                        label.style.textAlign = 'center';
+                        label.style.color = '#475569';
+                        label.style.fontSize = '0.82rem';
+                        label.style.fontWeight = '700';
+                        calendarDaysGridLight.appendChild(label);
+                    });
+
+                    for (let emptyIndex = 0; emptyIndex < firstDayOfWeek; emptyIndex += 1) {
+                        const emptyCell = document.createElement('div');
+                        emptyCell.style.minHeight = '44px';
+                        calendarDaysGridLight.appendChild(emptyCell);
+                    }
+
+                    for (let day = 1; day <= daysInMonth; day += 1) {
+                        const dateValue = `${calendarMonthDateLight.getFullYear()}-${String(calendarMonthDateLight.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        const cellDate = new Date(calendarMonthDateLight.getFullYear(), calendarMonthDateLight.getMonth(), day);
+                        const isPastDate = cellDate < calendarToday;
+                        const isUnavailable = unavailableDates.includes(dateValue);
+                        const dayBtn = document.createElement('button');
+                        dayBtn.type = 'button';
+                        dayBtn.textContent = day;
+                        dayBtn.dataset.date = dateValue;
+                        dayBtn.style.display = 'inline-flex';
+                        dayBtn.style.justifyContent = 'center';
+                        dayBtn.style.alignItems = 'center';
+                        dayBtn.style.minHeight = '44px';
+                        dayBtn.style.borderRadius = '14px';
+                        dayBtn.style.border = isUnavailable ? '1px solid #cbd5e1' : '1px solid #e2e8f0';
+                        dayBtn.style.padding = '0';
+                        dayBtn.style.background = isPastDate ? '#f8fafc' : isUnavailable ? '#f59e0b' : '#ffffff';
+                        dayBtn.style.color = isPastDate ? '#94a3b8' : isUnavailable ? '#111827' : '#0f172a';
+                        dayBtn.style.fontWeight = isUnavailable ? '700' : '500';
+                        dayBtn.style.cursor = isPastDate ? 'not-allowed' : 'pointer';
+                        dayBtn.disabled = isPastDate;
+                        dayBtn.addEventListener('click', () => {
+                            if (isPastDate) return;
+                            const hiddenInput = document.getElementById('unavailableDatesInput');
+                            if (!hiddenInput) return;
+                            const currentDates = hiddenInput.value.split(',').filter(d => d);
+                            if (currentDates.includes(dateValue)) {
+                                unavailableDates = unavailableDates.filter((d) => d !== dateValue);
+                            } else {
+                                unavailableDates = [...new Set([...currentDates, dateValue])];
+                            }
+                            unavailableDates.sort();
+                            updateUnavailableDatesInput();
+                            renderUnavailableDates();
+                        });
+                        calendarDaysGridLight.appendChild(dayBtn);
+                    }
+                };
 
                 const renderUnavailableDates = () => {
                     if (!unavailableDatesList) return;
@@ -2326,11 +2462,13 @@
                         });
                         unavailableDatesList.appendChild(tag);
                     });
+                    renderUnavailableDatesCalendarLight();
                 };
 
                 const updateUnavailableDatesInput = () => {
                     if (!unavailableDatesInput) return;
                     unavailableDatesInput.value = unavailableDates.join(',');
+                    console.log('📅 Updated unavailable dates input:', unavailableDatesInput.value);
                 };
 
                 if (addUnavailableDateBtn && unavailableDatesPicker) {
@@ -2345,6 +2483,16 @@
                         }
                     });
                 }
+
+                calendarPrevBtnLight?.addEventListener('click', () => {
+                    calendarMonthDateLight.setMonth(calendarMonthDateLight.getMonth() - 1);
+                    renderUnavailableDatesCalendarLight();
+                });
+
+                calendarNextBtnLight?.addEventListener('click', () => {
+                    calendarMonthDateLight.setMonth(calendarMonthDateLight.getMonth() + 1);
+                    renderUnavailableDatesCalendarLight();
+                });
 
                 renderUnavailableDates();
 
@@ -3469,6 +3617,40 @@ if (bookModalBtn) {
                     box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
                 }
 
+                .btn-primary-navy {
+                    background: linear-gradient(135deg, #0f1f35 0%, #1b365d 100%);
+                    color: white;
+                    box-shadow: 0 4px 12px rgba(27, 54, 93, 0.3);
+                }
+
+                .btn-primary-navy:hover {
+                    background: linear-gradient(135deg, #152b4f 0%, #1b365d 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(27, 54, 93, 0.4);
+                }
+
+                .date-picker-row .date-picker-wrap .form-control,
+                .date-picker-row .date-picker-wrap input[type="date"] {
+                    width: 100%;
+                    padding: 16px 18px;
+                    border-radius: 20px;
+                    border: 1px solid rgba(148, 163, 184, 0.3);
+                    background: #ffffff;
+                    color: #0f172a;
+                    font-size: 1rem;
+                    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
+                    appearance: none;
+                    -webkit-appearance: none;
+                    -moz-appearance: textfield;
+                }
+
+                .date-picker-row .date-picker-wrap .form-control:focus,
+                .date-picker-row .date-picker-wrap input[type="date"]:focus {
+                    border-color: rgba(59, 130, 246, 0.9);
+                    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+                    background: #ffffff;
+                }
+
                 .btn-confirm-final {
                     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
                     color: white;
@@ -3765,10 +3947,14 @@ if (bookModalBtn) {
 
             <!-- أزرار الملاحة -->
             <button class="lightbox-nav lightbox-prev" onclick="showPreviousLightbox()" title="السابق (←)">
-                <i class="fas fa-chevron-right"></i>
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
             <button class="lightbox-nav lightbox-next" onclick="showNextLightbox()" title="التالي (→)">
-                <i class="fas fa-chevron-left"></i>
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
 
             <!-- شريط التحكم في الأسفل -->
@@ -3776,13 +3962,18 @@ if (bookModalBtn) {
                 <!-- مجموعة التكبير -->
                 <div class="toolbar-group">
                     <button class="toolbar-btn" onclick="zoomOutLightbox()" title="تصغير (-)" id="zoomOutBtn">
-                        <i class="fas fa-minus"></i>
+                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                     </button>
                     <button class="toolbar-btn reset-btn" onclick="resetLightboxZoom()" title="إعادة تعيين (1x)">
                         <span id="zoomLevel">100%</span>
                     </button>
                     <button class="toolbar-btn" onclick="zoomInLightbox()" title="تكبير (+)" id="zoomInBtn">
-                        <i class="fas fa-plus"></i>
+                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                     </button>
                 </div>
 
@@ -3794,10 +3985,19 @@ if (bookModalBtn) {
                 <!-- أزرار إضافية -->
                 <div class="toolbar-group">
                     <button class="toolbar-btn" onclick="downloadCurrentImage()" title="تنزيل الصورة" id="downloadBtn">
-                        <i class="fas fa-download"></i>
+                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 3v11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 19h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                     </button>
                     <button class="toolbar-btn" onclick="toggleThumbnails()" title="فتح المعاينات" id="thumbnailsBtn">
-                        <i class="fas fa-th"></i>
+                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <rect x="4" y="4" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none" rx="1"/>
+                            <rect x="13" y="4" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none" rx="1"/>
+                            <rect x="4" y="13" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none" rx="1"/>
+                            <rect x="13" y="13" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none" rx="1"/>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -4180,6 +4380,27 @@ if (bookModalBtn) {
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+        }
+
+        .toolbar-btn svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+            fill: none;
+            stroke: currentColor;
+        }
+
+        .spinner-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .toolbar-btn:hover {

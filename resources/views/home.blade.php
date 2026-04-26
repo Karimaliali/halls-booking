@@ -12,6 +12,9 @@
             <div class="particle"></div>
             <div class="particle"></div>
             <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
         <div class="hero-content">
             <div class="hero-badge">
@@ -203,6 +206,27 @@
                 homeLocationDropdown.style.display = 'none';
             }
         });
+
+        function loadHeroBackground() {
+            const hero = document.querySelector('.hero');
+            if (!hero) return;
+
+            const remoteBg = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80';
+            const localBg = '{{ asset("front_halls_booking/hero-bg.svg") }}';
+            const testImage = new Image();
+
+            testImage.onload = function() {
+                hero.style.backgroundImage = `linear-gradient(135deg, rgba(27, 54, 93, 0.40), rgba(27, 54, 93, 0.20)), url('${remoteBg}')`;
+            };
+
+            testImage.onerror = function() {
+                hero.style.backgroundImage = `linear-gradient(135deg, rgba(27, 54, 93, 0.40), rgba(27, 54, 93, 0.20)), url('${localBg}')`;
+            };
+
+            testImage.src = remoteBg;
+        }
+
+        loadHeroBackground();
     </script>
 
     <section class="stats">
@@ -251,13 +275,16 @@
                         }
                         $features = is_array($hall->features) ? array_filter($hall->features) : [];
                     @endphp
-                    <div class="card card-hover {{ $statusClass === 'status-popular' ? 'card-premium' : '' }}" onclick="window.location.href='{{ route('halls.show', $hall) }}'" style="cursor: pointer;">
+                    <div class="card card-hover {{ $statusClass === 'status-popular' ? 'card-premium' : '' }}" onclick="handleCardClick(event, '{{ route('halls.show', $hall) }}')" style="cursor: pointer;">
                         <div class="card-img-wrapper">
                             <div class="card-img" style="background-image: url('{{ $imageUrl }}');">
                                 <div class="hall-status {{ $statusClass }}">{{ $statusLabel }}</div>
-                                <div class="hall-badge">
-                                    <i class="fas fa-heart"></i>
-                                </div>
+                                <!-- <div class="hall-badge">
+                                    <div class="fav-container">
+                                        <i class="fas fa-heart fav-btn" data-hall-id="{{ $hall->id }}" title="أضف للمفضلة"></i>
+                                        <span class="favorites-count">{{ $hall->favorites_count }}</span>
+                                    </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -416,4 +443,128 @@
             <p>جميع الحقوق محفوظة &copy;2026 Karim Elshazly</p>
         </div>
     </footer>
+
+    <script>
+        // Handle card clicks - prevent navigation when clicking favorite button
+        function handleCardClick(event, url) {
+            // Check if the click is on the favorite button or its container
+            if (event.target.closest('.fav-btn') || event.target.closest('.fav-container')) {
+                event.preventDefault();
+                event.stopPropagation();
+                return; // Don't navigate
+            }
+            // Otherwise, navigate to hall details
+            window.location.href = url;
+        }
+
+        // Favorite buttons functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const favButtons = document.querySelectorAll('.fav-btn');
+            
+            // Initialize favorite states
+            favButtons.forEach(async button => {
+                const hallId = button.dataset.hallId;
+                if (hallId) {
+                    try {
+                        const response = await fetch(`/api/halls/${hallId}/favorite`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.favorited) {
+                                button.classList.add('active');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error checking favorite status:', error);
+                    }
+                }
+            });
+            
+            favButtons.forEach(button => {
+                button.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    
+                    const hallId = this.dataset.hallId;
+                    if (!hallId) return;
+                    
+                    console.log('Favorite button clicked for hall:', hallId);
+                    
+                    try {
+                        const response = await fetch(`/api/halls/${hallId}/favorite`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({ favorited: !this.classList.contains('active') })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('Favorite response:', data);
+                            if (data.favorited) {
+                                this.classList.add('active');
+                            } else {
+                                this.classList.remove('active');
+                            }
+                        } else if (response.status === 401) {
+                            // User not logged in
+                            alert('يجب تسجيل الدخول أولاً لإضافة القاعة للمفضلة');
+                        } else {
+                            console.error('Favorite API error:', response.status);
+                        }
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .hall-badge .fav-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 10px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .hall-badge .fav-container:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.05);
+        }
+
+        .hall-badge .fav-btn {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            color: #fff;
+        }
+        
+        .hall-badge .fav-btn:hover {
+            transform: scale(1.2);
+            color: #ff6b9d;
+        }
+        
+        .hall-badge .fav-btn.active {
+            color: #e91e63 !important;
+            transform: scale(1.1);
+        }
+
+        .hall-badge .favorites-count {
+            font-size: 12px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+    </style>
 @endsection

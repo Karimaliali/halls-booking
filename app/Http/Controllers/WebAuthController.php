@@ -40,6 +40,7 @@ class WebAuthController extends Controller
         $fields = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'role' => ['required', 'string', 'in:customer,owner'],
         ]);
@@ -47,6 +48,7 @@ class WebAuthController extends Controller
         $user = User::create([
             'name' => $fields['name'],
             'email' => $fields['email'],
+            'phone' => $fields['phone'],
             'password' => Hash::make($fields['password']),
             'role' => $fields['role'],
         ]);

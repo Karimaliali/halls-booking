@@ -240,8 +240,16 @@
                     if (!$oldUnavailableDates) {
                         if (is_array($hall->unavailable_dates)) {
                             $oldUnavailableDates = implode(', ', $hall->unavailable_dates);
+                        } elseif (is_string($hall->unavailable_dates)) {
+                            // إذا كان string، حاول تحويله إلى array ثم إلى string مرة أخرى للتأكد من التنسيق
+                            $decoded = json_decode($hall->unavailable_dates, true);
+                            if (is_array($decoded)) {
+                                $oldUnavailableDates = implode(', ', $decoded);
+                            } else {
+                                $oldUnavailableDates = $hall->unavailable_dates;
+                            }
                         } else {
-                            $oldUnavailableDates = $hall->unavailable_dates;
+                            $oldUnavailableDates = '';
                         }
                     }
                 @endphp
@@ -378,8 +386,6 @@
                 multiImageInput.addEventListener('change', updatePreview);
 
                 const unavailableDatesInput = document.getElementById('unavailableDatesInput');
-
-                const unavailableDatesInput = document.getElementById('unavailableDatesInput');
                 const unavailableDatePicker = document.getElementById('unavailableDatePicker');
                 const unavailableDatesList = document.getElementById('unavailableDatesList');
                 const addUnavailableDateBtn = document.getElementById('addUnavailableDateBtn');
@@ -477,7 +483,7 @@
                 const weekDays = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
                 const monthFormatter = new Intl.DateTimeFormat('ar-EG', { month: 'long', year: 'numeric' });
 
-                const renderCalendar = () => {
+                function renderCalendar() {
                     if (!calendarMonthLabel || !calendarDaysGrid) return;
 
                     calendarMonthLabel.textContent = monthFormatter.format(calendarMonthDate);
@@ -567,11 +573,6 @@
                 }
 
                 renderCalendar();
-
-                // Start with a single row
-                galleryInputsContainer.innerHTML = '';
-                galleryInputsContainer.appendChild(createRow());
-                updateCount();
             });
         </script>
     @endpush

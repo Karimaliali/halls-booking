@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // Run refund for expired payments every hour
         $schedule->command('payments:refund-expired')->hourly();
+
+        // Cancel bookings not confirmed by owner within 36 hours every hour
+        $schedule->command('bookings:cancel-expired')->hourly();
     }
 
     /**

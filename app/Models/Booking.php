@@ -22,13 +22,18 @@ class Booking extends Model
         'payment_date',
         'payment_expires_at',
         'payment_method',
-        'transaction_id'
+        'transaction_id',
+        'cancelled_at',
+        'cancel_reason',
+        'refund_requested_at'
     ];
 
     protected $casts = [
         'booking_date' => 'date',
         'payment_date' => 'datetime',
         'payment_expires_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'refund_requested_at' => 'datetime',
         'deposit_amount' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

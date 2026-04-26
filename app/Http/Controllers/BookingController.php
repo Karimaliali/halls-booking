@@ -59,7 +59,7 @@ class BookingController extends Controller
             'id_card_image'     => $idCardPath,
             'receipt_image'     => $receiptPath,
             'payment_status'    => 'pending',
-            'payment_expires_at' => now()->addHours(24),
+            'payment_expires_at' => now()->addMinutes(20),
         ]);
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -67,10 +67,11 @@ class BookingController extends Controller
                 'success' => 'تم إرسال طلب الحجز بنجاح! سيتم مراجعته من قبل الإدارة.',
                 'booking_id' => $booking->id,
                 'booking' => $booking,
+                'redirect_url' => route('customer.bookings'),
             ]);
         }
 
-        return back()->with('success', 'تم إرسال طلب الحجز بنجاح! سيتم مراجعته من قبل الإدارة.');
+        return redirect()->route('customer.bookings')->with('success', 'تم إرسال طلب الحجز بنجاح! سيتم مراجعته من قبل الإدارة.');
     }
 
     public function check(Request $request)
@@ -106,6 +107,7 @@ class BookingController extends Controller
     private function activeBookingsForHallQuery($hallId)
     {
         return Booking::where('hall_id', $hallId)
+            ->where('status', '!=', 'cancelled')
             ->where(function ($query) {
                 $query->where('status', 'confirmed')
                     ->orWhere('payment_status', 'completed')
@@ -223,6 +225,25 @@ class BookingController extends Controller
         $booking->update(['status' => 'cancelled']);
 
         return back()->with('success', 'تم إلغاء الحجز بنجاح.');
+    }
+
+    public function requestRefund(Booking $booking)
+    {
+        abort_if($booking->user_id !== auth()->id(), 403);
+
+        if ($booking->status !== 'cancelled' || $booking->payment_status !== 'refunded') {
+            return back()->with('error', 'لا يمكن طلب استرداد لهذا الحجز.');
+        }
+
+        // Here you would integrate with Paymob or your payment gateway to process the refund
+        // For now, we'll just mark it as refunded
+
+        $booking->update([
+            'payment_status' => 'refund_processed',
+            'refund_requested_at' => now(),
+        ]);
+
+        return back()->with('success', 'تم طلب استرداد العربون بنجاح. سيتم معالجته قريباً.');
     }
 
     public function customerBookings(Request $request){

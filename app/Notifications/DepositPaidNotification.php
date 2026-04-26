@@ -38,12 +38,22 @@ class DepositPaidNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $customerPhone = $this->booking->user->phone;
+        
+        // Show phone or a helpful message if not available
+        if (empty($customerPhone)) {
+            $phoneDisplay = 'يرجى التحقق من ملف العميل الشخصي';
+        } else {
+            $phoneDisplay = $customerPhone;
+        }
+        
         return (new MailMessage)
             ->subject('تم دفع عربون حجز جديد')
             ->greeting('مرحباً ' . $notifiable->name)
             ->line('تم دفع عربون حجز لقاعتك: ' . $this->booking->hall->name)
             ->line('تاريخ الحجز: ' . $this->booking->booking_date->format('Y-m-d'))
             ->line('اسم العميل: ' . $this->booking->user_name)
+            ->line('رقم تلفون العميل: ' . $phoneDisplay)
             ->line('مبلغ العربون: ' . $this->booking->deposit_amount . ' ج.م')
             ->action('عرض تفاصيل الحجز', url('/owner/bookings/' . $this->booking->id))
             ->line('يرجى تأكيد الحجز لتحويل العربون إلى حسابك.')
@@ -57,6 +67,15 @@ class DepositPaidNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        $customerPhone = $this->booking->user->phone;
+        
+        // Show phone or a helpful message if not available
+        if (empty($customerPhone)) {
+            $phoneDisplay = 'يرجى التحقق من ملف العميل الشخصي';
+        } else {
+            $phoneDisplay = $customerPhone;
+        }
+        
         return [
             'title' => 'تم دفع عربون حجز جديد',
             'message' => 'تم دفع عربون لقاعتك: ' . $this->booking->hall->name . ' بتاريخ ' . $this->booking->booking_date->format('Y-m-d'),
@@ -64,6 +83,7 @@ class DepositPaidNotification extends Notification
             'hall_name' => $this->booking->hall->name,
             'booking_date' => $this->booking->booking_date->format('Y-m-d'),
             'customer_name' => $this->booking->user_name,
+            'customer_phone' => $phoneDisplay,
             'deposit_amount' => $this->booking->deposit_amount,
             'type' => 'deposit_paid',
             'action_url' => url('/owner/bookings'),

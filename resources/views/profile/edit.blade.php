@@ -46,6 +46,11 @@
                     <label style="display: block; margin-bottom: 6px; font-weight: 700;">البريد الإلكتروني</label>
                     <input type="email" name="email" value="{{ old('email', auth()->user()->email) }}" required style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff;" />
                 </div>
+
+                <div class="form-group" style="flex: 1; min-width: 280px;">
+                    <label style="display: block; margin-bottom: 6px; font-weight: 700;">رقم الهاتف</label>
+                    <input type="tel" name="phone" value="{{ old('phone', auth()->user()->phone) }}" required style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff;" />
+                </div>
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">

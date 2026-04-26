@@ -410,9 +410,10 @@
                                 <span class="result-badge {{ trim($hall->status) === 'متاح' || trim($hall->status) === 'active' ? 'available' : 'unavailable' }}">
                                     {{ trim($hall->status) === 'متاح' || trim($hall->status) === 'active' ? 'متاحة' : 'غير متاحة' }}
                                 </span>
-                                <button class="fav-btn" type="button" onclick="event.stopPropagation();">
+                                <button class="fav-btn" type="button" onclick="event.stopPropagation();" data-hall-id="{{ $hall->id }}">
                                     <i class="fa fa-heart"></i>
                                 </button>
+                                <span class="favorites-count">{{ $hall->favorites_count }}</span>
                             </div>
                             <div class="result-content">
                                 <div class="result-header">
@@ -587,6 +588,117 @@
             searchLocationInput.value = city;
             searchLocationDropdown.style.display = 'none';
         }
+
+        // Favorite buttons functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const favButtons = document.querySelectorAll('.fav-btn');
+            
+            // Initialize favorite states
+            favButtons.forEach(async button => {
+                const hallId = button.dataset.hallId;
+                if (hallId) {
+                    try {
+                        const response = await fetch(`/api/halls/${hallId}/favorite`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.favorited) {
+                                button.classList.add('active');
+                                button.style.color = '#e91e63';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error checking favorite status:', error);
+                    }
+                }
+            });
+            
+            favButtons.forEach(button => {
+                button.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const hallId = this.dataset.hallId;
+                    if (!hallId) return;
+                    
+                    try {
+                        const response = await fetch(`/api/halls/${hallId}/favorite`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({ favorited: !this.classList.contains('active') })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.favorited) {
+                                this.classList.add('active');
+                                this.style.color = '#e91e63';
+                            } else {
+                                this.classList.remove('active');
+                                this.style.color = '';
+                            }
+                        } else if (response.status === 401) {
+                            // User not logged in
+                            alert('يجب تسجيل الدخول أولاً لإضافة القاعة للمفضلة');
+                        }
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                    }
+                });
+            });
+        });
     </script>
+
+    <style>
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .fav-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+        
+        .fav-btn.active {
+            color: #e91e63 !important;
+        }
+        
+        .fav-btn i {
+            font-size: 18px;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+        
+        .fav-btn.active i {
+            color: #e91e63;
+        }
+
+        .favorites-count {
+            position: absolute;
+            top: 10px;
+            right: 55px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+            z-index: 10;
+        }
+    </style>
 @endsection
 

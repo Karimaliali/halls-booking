@@ -11,9 +11,10 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'phone' => 'required|string|max:20',
         ]);
 
-        auth()->user()->update($request->only(['name', 'email']));
+        auth()->user()->update($request->only(['name', 'email', 'phone']));
 
         return redirect()->back()->with('status', 'تم تحديث البيانات بنجاح.');
     }
