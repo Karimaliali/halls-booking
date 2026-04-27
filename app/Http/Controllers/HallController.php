@@ -17,7 +17,17 @@ class HallController extends Controller
      * )
      */
     public function index() {
-        return Hall::all();
+        return Hall::select([
+            'id',
+            'name',
+            'price',
+            'main_image',
+            'location',
+            'capacity',
+            'category',
+            'status',
+            'created_at',
+        ])->latest()->paginate(20);
     }
 
     /**
